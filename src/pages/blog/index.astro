@@ -1,0 +1,84 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Pagination from '@/components/ui/Pagination.astro';
+import BlogPost from '@/components/posts/BlogPost.astro';
+import { fetchContentfulEntries } from '@/lib/contentful';
+
+type BlogFields = {
+  title?: string;
+  slug?: string;
+  publishDate?: string;
+  description?: string;
+  thumbnail?: { sys?: { id?: string } };
+  banner?: { sys?: { id?: string } };
+};
+
+const { items, assets } = await fetchContentfulEntries<BlogFields>('articles');
+const assetsById = new Map(assets.map((asset) => [asset.sys.id, asset]));
+
+const toTime = (d?: string) => {
+  const t = d ? Date.parse(d) : NaN;
+  return Number.isFinite(t) ? t : -Infinity;
+};
+
+const sorted = items
+  .filter((item) => item.fields?.slug)
+  .sort((a, b) => toTime(b.fields.publishDate) - toTime(a.fields.publishDate));
+
+const pageSize = 10;
+---
+
+<Layout
+  title="Vizune Designs - Blog"
+  description="News and updates from Vizune Designs."
+  heading="Vizune Blog"
+  kicker="News & updates"
+  intro="Every post from the Vizune blog, newest first."
+>
+  <div class="blog-list" data-section="blog">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-5xl mx-auto">
+      {sorted.map((post) => (
+        <BlogPost post={post} assetsById={assetsById} />
+      ))}
+    </div>
+
+    <Pagination id="blog" pageSize={pageSize} />
+
+    <script is:inline define:vars={{ pageSize }}>
+      (() => {
+        const root = document.querySelector('.blog-list[data-section="blog"]');
+        if (!root) return;
+
+        const cards = Array.from(root.querySelectorAll('.blog-card'));
+        const pagination = root.querySelector('[data-pagination-id="blog"]');
+
+        let currentPage = 1;
+
+        function applyPagination() {
+          const start = (currentPage - 1) * pageSize;
+          const end = start + pageSize;
+
+          cards.forEach((card, index) => {
+            card.classList.toggle('hidden', !(index >= start && index < end));
+          });
+
+          pagination?.dispatchEvent(
+            new CustomEvent('pagination:set', {
+              detail: { total: cards.length, pageSize, page: currentPage },
+            })
+          );
+        }
+
+        applyPagination();
+
+        pagination?.addEventListener('pagination:change', (e) => {
+          currentPage = e.detail?.page || 1;
+          applyPagination();
+
+          const y = root.getBoundingClientRect().top + window.scrollY - 16;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        });
+      })();
+    </script>
+  </div>
+</Layout>

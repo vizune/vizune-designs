@@ -1,9 +1,8 @@
 ---
 import Layout from '@/layouts/Layout.astro';
-import PostPagination from '@/components/ui/PostPagination.astro';
+import BlogArticle from '@/components/blog/BlogArticle.astro';
 import {
   fetchContentfulEntries,
-  richTextToHtml,
   type RichTextDocument,
   type ContentfulEntry,
 } from '@/lib/contentful';
@@ -67,36 +66,7 @@ const {
 const title = entry.fields.title ?? 'Blog post';
 const description = entry.fields.description ?? title;
 const entryID = entry.sys.id;
-const bannerId = entry.fields.banner?.sys.id;
-
-const banner = bannerId
-  ? (assetsById[bannerId] as {
-      fields?: {
-        file?: {
-          url?: string;
-        };
-        title?: string;
-        description?: string;
-      };
-    })
-  : undefined;
-
-const bannerUrl = banner?.fields?.file?.url
-  ? `https:${banner.fields.file.url}`
-  : undefined;
-
-const bannerAlt =
-  banner?.fields?.description ??
-  banner?.fields?.title ??
-  title;
-
-const html = richTextToHtml(
-  entry.fields.content,
-  new Map(Object.entries(assetsById))
-);
-
 const pageUrl = Astro.url.href;
-
 ---
 
 <Layout
@@ -107,27 +77,15 @@ const pageUrl = Astro.url.href;
   intro={entry.fields.description}
   date={entry.fields.publishDate}
 >
-  <article class="home-article">
-    {
-      bannerUrl && (
-        <figure class="ArticleBanner">
-          <img src={bannerUrl} alt={bannerAlt} />
-        </figure>
-      )
-    }
+  <BlogArticle entry={entry} assetsById={assetsById} prev={prev} next={next} />
 
-    <div class="Prose" set:html={html} />
-
-    <PostPagination prev={prev} next={next} />
-
-    <section class="Comments">
-      <h2 class="PanelHeading">Comments</h2>
-      <div id="disqus_thread"></div>
-      <noscript>
-        Please enable JavaScript to view the comments powered by Disqus.
-      </noscript>
-    </section>
-  </article>
+  <section class="Comments">
+    <h2 class="PanelHeading">Comments</h2>
+    <div id="disqus_thread"></div>
+    <noscript>
+      Please enable JavaScript to view the comments powered by Disqus.
+    </noscript>
+  </section>
 
   <script is:inline define:vars={{ pageUrl, entryID }}>
     window.disqus_config = function () {
@@ -145,37 +103,7 @@ const pageUrl = Astro.url.href;
   </script>
 </Layout>
 
-<style is:global>
-  /* Banner framed like a picture on the panel */
-  .ArticleBanner {
-    max-width: 52rem;
-    margin: 0 auto 3rem;
-    padding: 5px;
-    background: linear-gradient(180deg, #1d1840, #07061a);
-    border: 1px solid rgba(201, 184, 255, .55);
-    box-shadow: inset 0 0 0 4px #07061a, 0 18px 40px rgba(27, 24, 48, .3);
-  }
-
-  .ArticleBanner img {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-
-  /* Keep the whole post (text and image rows) in one reading column */
-  .home-article .Prose {
-    max-width: 40rem;
-    margin: 0 auto;
-  }
-
-  /* Inline images in posts sit side by side */
-  .home-article .Prose .content-image {
-    display: inline-block;
-    max-width: 33%;
-    margin: 2rem 0;
-    vertical-align: top;
-  }
-
+<style>
   .Comments {
     max-width: 40rem;
     margin: 4rem auto 0;

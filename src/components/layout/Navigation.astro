@@ -4,6 +4,7 @@ import Moon from '@/components/ornament/Moon.astro';
 
 const nav = [
   { page: "Home",      link: "/" },
+  { page: "Blog",      link: "/blog/" },
   { page: "Avatars",   link: "/avatars/" },
   { page: "Renders",   link: "/renders/" },
   { page: "PSDs",      link: "/psd/" },
@@ -12,10 +13,9 @@ const nav = [
   { page: "Request",   link: "/request/", highlight: true },
 ];
 
-// Blog posts live on the home page, so they light up "Home"
 const path = Astro.url.pathname.replace(/\/?$/, '/');
 const isCurrent = (link: string) =>
-  link === '/' ? path === '/' || path.startsWith('/blog/') : path.startsWith(link);
+  link === '/' ? path === '/' : path.startsWith(link);
 ---
 
 <nav class="Nav" aria-label="Main">

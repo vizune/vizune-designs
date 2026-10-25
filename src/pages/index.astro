@@ -1,74 +1,56 @@
 ---
-import SectionHeading from '@/components/ui/SectionHeading.astro';
-
 import Layout from '@/layouts/Layout.astro';
-import BlogPost from '@/components/posts/BlogPost.astro';
+import BlogArticle from '@/components/blog/BlogArticle.astro';
+import {
+  fetchContentfulEntries,
+  type RichTextDocument,
+} from '@/lib/contentful';
 
-type ArticlePost = {
-  sys: { id: string };
-  fields: {
-    title?: string;
-    slug?: string;
-    publishDate?: string;
-    description?: string;
-    thumbnail?: { sys?: { id?: string } };
-  };
+type BlogFields = {
+  title?: string;
+  slug?: string;
+  banner?: { sys: { id: string } };
+  publishDate?: string;
+  description?: string;
+  content?: RichTextDocument;
 };
 
-type Asset = {
-  sys: { id: string };
-  fields?: {
-    title?: string;
-    description?: string;
-    file?: { url?: string };
-  };
-};
-
-const data = await fetch(import.meta.env.PUBLIC_POSTS_BLOG).then((r) => r.json());
-
-const items: ArticlePost[] = (data?.items ?? []) as ArticlePost[];
-const assets: Asset[] = (data?.includes?.Asset ?? []) as Asset[];
-const assetsById = new Map<string, Asset>(assets.map((a) => [a.sys.id, a]));
+const { items, assets } = await fetchContentfulEntries<BlogFields>('articles');
+const assetsById = Object.fromEntries(assets.map((asset) => [asset.sys.id, asset]));
 
 const toTime = (d?: string) => {
   const t = d ? Date.parse(d) : NaN;
   return Number.isFinite(t) ? t : -Infinity;
 };
 
-const sorted = [...items].sort(
-  (a, b) => toTime(b.fields.publishDate) - toTime(a.fields.publishDate)
-);
+// Newest first: the home page shows the latest post in full
+const sorted = items
+  .filter((item) => item.fields?.slug)
+  .sort((a, b) => toTime(b.fields.publishDate) - toTime(a.fields.publishDate));
 
-const featuredPost = sorted[0];
-const recentPosts = sorted.slice(1, 7);
+const latest = sorted[0];
+const previous = sorted[1];
+const prev = previous
+  ? { title: previous.fields.title ?? 'Blog post', url: `/blog/${previous.fields.slug}/` }
+  : null;
 ---
 
 <Layout
   title="Welcome to Vizune Designs - News & Updates"
   description="Vizune is a creative hub where anime, gaming, design, and web development merge — explore tutorials, visuals, and resources to fuel your imagination."
-  heading="Welcome to Vizune Designs"
-  kicker="Obelisk: Nocturna"
-  intro="A creative hub where anime, gaming, design and web development merge."
+  heading={latest?.fields.title ?? 'Welcome to Vizune Designs'}
+  kicker="Latest news"
+  intro={latest?.fields.description}
+  date={latest?.fields.publishDate}
 >
-  {featuredPost ? (
-    <section class="max-w-5xl mx-auto">
-      <h2 class="PanelHeading">Latest news</h2>
-      <BlogPost post={featuredPost} assetsById={assetsById} featured />
-    </section>
-  ) : null}
-
-  <p class="text-center pt-10">
-    <a href="/templates/" class="Btn">Explore the templates <span aria-hidden="true">›</span></a>
-  </p>
-
-  {recentPosts.length ? (
-    <section class="Section" slot="after">
-      <SectionHeading title="News & updates" subtitle="Latest posts from the Vizune blog" />
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {recentPosts.map((post) => (
-          <BlogPost post={post} assetsById={assetsById} />
-        ))}
-      </div>
-    </section>
-  ) : null}
+  {latest ? (
+    <BlogArticle entry={latest} assetsById={assetsById} prev={prev}>
+      <p class="text-center pt-6">
+        <a href={`/blog/${latest.fields.slug}/#disqus_thread`} class="Btn Btn--small">Leave a comment <span aria-hidden="true">›</span></a>
+        <a href="/blog/" class="Btn Btn--small ml-3">All posts <span aria-hidden="true">›</span></a>
+      </p>
+    </BlogArticle>
+  ) : (
+    <p class="PanelIntro">A creative hub where anime, gaming, design and web development merge.</p>
+  )}
 </Layout>

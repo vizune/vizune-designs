@@ -1,0 +1,74 @@
+---
+import PostPagination from '@/components/ui/PostPagination.astro';
+import { richTextToHtml } from '@/lib/contentful';
+
+// The body of a blog post: framed banner, rich text and previous / next links.
+// Used by the home page (latest post) and the post pages.
+const { entry, assetsById, prev = null, next = null } = Astro.props;
+
+const title = entry.fields.title ?? 'Blog post';
+const bannerId = entry.fields.banner?.sys?.id;
+const banner = bannerId ? assetsById[bannerId] : undefined;
+
+const bannerUrl = banner?.fields?.file?.url
+  ? `https:${banner.fields.file.url}`
+  : undefined;
+
+const bannerAlt =
+  banner?.fields?.description ??
+  banner?.fields?.title ??
+  title;
+
+const html = richTextToHtml(
+  entry.fields.content,
+  new Map(Object.entries(assetsById))
+);
+---
+
+<article class="home-article">
+  {
+    bannerUrl && (
+      <figure class="ArticleBanner">
+        <img src={bannerUrl} alt={bannerAlt} />
+      </figure>
+    )
+  }
+
+  <div class="Prose" set:html={html} />
+
+  <slot />
+
+  <PostPagination prev={prev} next={next} />
+</article>
+
+<style is:global>
+  /* Banner framed like a picture on the panel */
+  .ArticleBanner {
+    max-width: 52rem;
+    margin: 0 auto 3rem;
+    padding: 5px;
+    background: linear-gradient(180deg, #1d1840, #07061a);
+    border: 1px solid rgba(201, 184, 255, .55);
+    box-shadow: inset 0 0 0 4px #07061a, 0 18px 40px rgba(27, 24, 48, .3);
+  }
+
+  .ArticleBanner img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* Keep the whole post (text and image rows) in one reading column */
+  .home-article .Prose {
+    max-width: 40rem;
+    margin: 0 auto;
+  }
+
+  /* Inline images in posts sit side by side */
+  .home-article .Prose .content-image {
+    display: inline-block;
+    max-width: 33%;
+    margin: 2rem 0;
+    vertical-align: top;
+  }
+</style>
