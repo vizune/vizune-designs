@@ -37,9 +37,15 @@ const sorted = [...items].sort(
 const pageSize = 9;
 ---
 
-<Layout title="Vizune.com - PSD Downloads" heading="PSD Downloads" description="Photoshop PSD downloads.">
+<Layout
+  title="Vizune Designs - PSD Downloads"
+  heading="PSD Downloads"
+  kicker="Resources"
+  intro="Layered Photoshop files from my graphics, free to download and learn from."
+  description="Photoshop PSD downloads from Vizune Designs."
+>
   <div class="psd-list" id="psd-wrapper" data-section="psd">
-    <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5 lg:gap-9" data-grid>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" data-grid>
       {sorted.map((post) => (
         <PsdPost post={post} assetsById={assetsById} />
       ))}

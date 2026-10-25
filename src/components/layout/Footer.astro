@@ -1,18 +1,19 @@
 ---
-import { Social, Affiliates } from '@/components';
+import About from '@/components/sections/About.astro';
+import Affiliates from '@/components/sections/Affiliates.astro';
+import Social from '@/components/sections/Social.astro';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
 ---
 
-<footer class="relative bg-raven">
-  <div class="container mx-auto px-4 py-6 items-center gap-8 xl:grid xl:grid-flow-row xl:grid-cols-3 lg:justify-center">
+<footer class="Footer">
+  <section class="Section">
+    <About />
+  </section>
+
+  <section class="Section">
+    <SectionHeading title="Affiliates" subtitle="Kindred sites & creators" />
     <Affiliates />
-    <Social />
-    <div class="min-h-[450px] lg:h-full">
-      <!-- BEGIN CBOX - www.cbox.ws - v4.3 -->
-      <div id="cboxdiv" style="position: relative; margin: 0 auto; width: 100%; height: 100%; font-size: 0; line-height: 0; display: flex; flex-direction: column;">
-      <div style="position: relative; height: 100%; flex-grow: 1; overflow: auto; overflow-y: auto; -webkit-overflow-scrolling: touch; border: 0px solid;"><iframe src="https://www7.cbox.ws/box/?boxid=548557&boxtag=kb26kf&sec=main" title="Cbox chat log" marginheight="0" marginwidth="0" frameborder="0" width="100%" height="100%" scrolling="auto" allowtransparency="yes" name="cboxmain7-548557" id="cboxmain7-548557"></iframe></div>
-      <div style="position: relative; height: 92px; overflow: hidden; border: 0px solid; border-top: 0px;"><iframe src="https://www7.cbox.ws/box/?boxid=548557&boxtag=kb26kf&sec=form" title="Cbox chat form" allow="autoplay" marginheight="0" marginwidth="0" frameborder="0" width="100%" height="100%" scrolling="no" allowtransparency="yes" name="cboxform7-548557" id="cboxform7-548557"></iframe></div>
-      </div>
-      <!-- END CBOX -->	
-    </div>
-  </div>
+  </section>
+
+  <Social />
 </footer>

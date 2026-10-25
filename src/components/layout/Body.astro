@@ -1,45 +1,169 @@
 ---
-const { heading } = Astro.props;
-import Divider from '@/assets/divider.svg';
+import Sparkle from '@/components/ornament/Sparkle.astro';
+
+// The light content panel with floral corners, headed by the page title.
+// `kicker`, `intro` and `date` (YYYY-MM-DD or ISO) are optional.
+const { heading, kicker, intro, date } = Astro.props;
+
+const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const isoDate = date ? String(date).slice(0, 10) : '';
+const formattedDate = isoDate
+  ? (() => { const [y, m, d] = isoDate.split('-').map(Number); return `${d} ${months[m - 1]} ${y}`; })()
+  : '';
 ---
 
-<main
-  class="page py-[4rem] px-4
-         bg-[radial-gradient(1200px_680px_at_50%_120%,_rgba(59,47,99,0.95)_0%,_rgba(0,0,0,0.55)_45%,_transparent_75%),linear-gradient(to_bottom,_transparent,_rgba(0,0,0,0.55)_60%,_rgba(0,0,0,0.8))]"
->
-  <section
-    class="container mx-auto
-           p-8
-           bg-[rgba(14,14,26,0.6)]
-           border border-[rgba(214,201,255,0.14)]
-           rounded-[22px]
-           backdrop-blur-[6px] backdrop-saturate-[1.2]
-           shadow-[0_10px_30px_rgba(0,0,0,0.45),_inset_0_1px_0_rgba(255,255,255,0.05)]"
-  >
-    <header class="relative pt-4 pb-8 mb-6">
-      <h1
-        class="mt-5 mb-10
-               tracking-[.08em]
-               text-clay
-               [text-shadow:0_0_18px_rgba(134,94,255,0.25)]
-               font-extralight text-4xl sm:text-5xl"
-      >
-        {heading}
-      </h1>
+<main class="Content">
+  <div class="Content-panel">
+    {['tl', 'tr', 'bl', 'br'].map((pos) => (
       <img
-        src={Divider.src}
+        src="/floral-corner.png"
+        width="149"
+        height="150"
         alt=""
-        aria-hidden="true"
-        class="pointer-events-none mx-auto mt-2
-               w-[min(55rem,88%)]
-               opacity-90
-               [filter:drop-shadow(0_0_10px_rgba(134,94,255,0.25))]"
-        loading="eager"
+        role="presentation"
+        class={`Content-corner Content-corner--${pos}`}
       />
-    </header>
+    ))}
+    <div class="Content-frame">
+      <div class="Content-body">
+        <header class="Article">
+          <span class="Article-ornament" aria-hidden="true"></span>
 
-    <div class="content text-xl">
-      <slot />
+          {(kicker || formattedDate) && (
+            <p class="Article-meta">
+              {kicker && <span class="Article-category">{kicker}</span>}
+              {kicker && formattedDate && <Sparkle class="Article-sep" />}
+              {formattedDate && <time datetime={isoDate}>{formattedDate}</time>}
+            </p>
+          )}
+
+          <h1 class="Article-title">{heading}</h1>
+
+          {intro && <p class="Article-desc">{intro}</p>}
+        </header>
+
+        <slot />
+      </div>
     </div>
-  </section>
+  </div>
 </main>
+
+<style>
+.Content {
+  padding: 4rem 1rem 0;
+}
+
+.Content-panel {
+  position: relative;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 5px;
+  background: #fbfaff;
+  box-shadow:
+    0 0 0 1px rgba(201, 184, 255, .6),
+    0 0 40px rgba(123, 92, 255, .35),
+    0 30px 80px rgba(0, 0, 0, .55);
+}
+
+.Content-frame {
+  border: 3px solid var(--midnight);
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(201, 184, 255, .28), transparent 55%),
+    radial-gradient(ellipse at 50% 100%, rgba(201, 184, 255, .22), transparent 55%),
+    #f4f2fa;
+}
+
+.Content-body {
+  position: relative;
+  padding: 3.5rem 1.25rem 5rem;
+  color: var(--ink);
+}
+
+.Content-corner {
+  position: absolute;
+  z-index: 1;
+  width: clamp(70px, 11vw, 149px);
+  height: auto;
+  aspect-ratio: 149 / 150;
+  pointer-events: none;
+}
+
+.Content-corner--tl { top: 6px; left: 6px; }
+.Content-corner--tr { top: 6px; right: 6px; transform: rotate(90deg); }
+.Content-corner--bl { bottom: 6px; left: 6px; transform: rotate(-90deg); }
+.Content-corner--br { bottom: 6px; right: 6px; transform: rotate(180deg); }
+
+@media (min-width: 768px) {
+  .Content-body {
+    padding: 4rem 4rem 6rem;
+  }
+}
+
+/* ---------- Page heading ---------- */
+
+.Article {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin: 0 auto 2.5rem;
+  max-width: 40rem;
+}
+
+/* The traced line divider, coloured from CSS */
+.Article-ornament {
+  width: min(14rem, 60%);
+  aspect-ratio: 2030 / 300;
+  background: var(--purple);
+  -webkit-mask: url('/divider-line.svg') center / contain no-repeat;
+  mask: url('/divider-line.svg') center / contain no-repeat;
+  margin-bottom: 1.25rem;
+}
+
+.Article-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: .35rem .7rem;
+  margin: 0 0 .6rem;
+  font-family: var(--font-body);
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  line-height: 1.4;
+  color: #5b4f99;
+}
+
+.Article-category {
+  color: var(--carmine);
+}
+
+.Article-sep {
+  font-size: .6rem;
+  color: var(--violet);
+}
+
+.Article-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.2rem, 6vw, 3.4rem);
+  line-height: 1.08;
+  letter-spacing: .005em;
+  color: #1f1a4d;
+  text-wrap: balance;
+  margin: 0;
+}
+
+.Article-desc {
+  margin: .9rem 0 0;
+  max-width: 32rem;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  line-height: 1.5;
+  color: #4a4566;
+  /* Even out the lines so no word is left on its own */
+  text-wrap: balance;
+}
+</style>

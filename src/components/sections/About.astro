@@ -1,0 +1,230 @@
+---
+import Sparkle from '@/components/ornament/Sparkle.astro';
+
+const network = [
+  { name: 'Vizune Network', desc: 'A hub for all my hobbies, projects and interests.', url: 'https://vizune.net' },
+  { name: 'Vizune Studio', desc: 'Where new worlds begin.', url: 'https://vizune.com' },
+  { name: 'Vizune Reviews', desc: 'A love letter to the games that deserve to be remembered.', url: 'https://vizune.nekoweb.org' },
+  { name: 'Celestial Vault', desc: 'Treasures gathered from different worlds.', url: 'https://celestial-vault.neocities.org' },
+  { name: 'Pressed Memories', desc: 'Wandering memories, preserved.', url: 'https://pressed-memories.neocities.org' },
+];
+---
+
+<div class="About">
+  <div class="About-portrait">
+    <span class="About-ring" aria-hidden="true"></span>
+    <img src="/avatar.gif" alt="Sasha's avatar" width="100" height="100" loading="lazy" />
+  </div>
+
+  <div class="About-text">
+    <p class="About-kicker">
+      <Sparkle class="About-star" /> About
+    </p>
+    <h2 class="About-title">The creator</h2>
+    <p>Hi, I'm Sasha! Vizune started as my little creative sanctuary long before it became a network. It's where a love of web design grew into a career in front-end development. These days I work in product and delivery but this is still where I make magical creations purely for fun and share with you.</p>
+    <p>Here you'll find anime graphics, templates and tutorials and across the network I am working on a indie game studio, reviews of the hidden-gem JRPGs I adore and a growing shelf of PS2 games and other trinkets.</p>
+    <p class="About-sign">- Sasha, <cite>Vizune.net</cite></p>
+  </div>
+
+  <div class="About-links">
+    <h3>Vizune Network</h3>
+    <ul>
+      {network.map((link) => (
+        <li>
+          <a href={link.url} target="_blank" rel="noopener">
+            <span class="About-site">
+              <span>{link.name}</span>
+              <span class="About-desc">{link.desc}</span>
+            </span>
+            <span aria-hidden="true" class="About-arrow">↗</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>
+
+<style>
+.About {
+    display: grid;
+    grid-template-columns: auto 1fr 19rem;
+    gap: 2.5rem;
+    align-items: center;
+    padding: 2.25rem 2.5rem;
+    background:
+        radial-gradient(ellipse at 15% 50%, rgba(123, 92, 255, .2), transparent 60%),
+        linear-gradient(180deg, rgba(24, 18, 58, .8), rgba(8, 6, 24, .9));
+    border: 1px solid rgba(201, 184, 255, .3);
+    box-shadow: inset 0 0 0 5px rgba(8, 6, 24, .8), inset 0 0 0 6px rgba(201, 184, 255, .15);
+}
+
+/* Portrait in a glowing double ring with a slowly turning dotted halo */
+.About-portrait {
+    position: relative;
+    width: 160px;
+    height: 160px;
+    flex-shrink: 0;
+}
+
+.About-portrait img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px var(--lavender), 0 0 30px rgba(167, 139, 255, .55);
+}
+
+.About-ring {
+    position: absolute;
+    inset: -12px;
+    border-radius: 50%;
+    border: 1px dashed rgba(201, 184, 255, .6);
+    animation: spin 40s linear infinite;
+}
+
+.About-ring::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: calc(50% - 4px);
+    width: 8px;
+    height: 8px;
+    background: #fff;
+    clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+    filter: drop-shadow(0 0 4px var(--lavender));
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.About-kicker {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: .65rem;
+    letter-spacing: .3em;
+    text-transform: uppercase;
+    color: var(--lavender-dim);
+}
+
+.About-star {
+    color: #fff;
+    font-size: .8rem;
+}
+
+.About-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 2rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: #fff;
+    margin: .25rem 0 .75rem;
+}
+
+.About-text p:not(.About-kicker) {
+    max-width: 34rem;
+    font-size: .9rem;
+    line-height: 1.75;
+    color: #c9c2e6;
+}
+
+.About-text p:not(.About-kicker) + p:not(.About-sign) {
+    margin-top: .75rem;
+}
+
+.About-sign {
+    margin-top: .75rem;
+    font-family: var(--font-display);
+    font-size: 1.1rem !important;
+    color: var(--lavender) !important;
+}
+
+.About-links {
+    min-width: 0;
+    padding-left: 2rem;
+    border-left: 1px solid rgba(201, 184, 255, .2);
+}
+
+.About-links h3 {
+    font-size: .65rem;
+    letter-spacing: .3em;
+    text-transform: uppercase;
+    color: var(--lavender-dim);
+    margin-bottom: .5rem;
+}
+
+.About-links a {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: .45rem 0;
+    font-size: .85rem;
+    color: #ddd6f7;
+    border-bottom: 1px solid rgba(201, 184, 255, .1);
+    transition: color .2s ease;
+}
+
+.About-links a:hover {
+    color: #fff;
+}
+
+/* Slide the text on hover without changing the column's width */
+.About-site {
+    transition: transform .2s ease;
+}
+
+.About-links a:hover .About-site {
+    transform: translateX(.35rem);
+}
+
+.About-site {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+}
+
+.About-desc {
+    margin-top: .1rem;
+    font-size: .72rem;
+    line-height: 1.45;
+    text-wrap: pretty;
+    color: var(--lavender-dim);
+}
+
+.About-links a {
+    align-items: center;
+}
+
+.About-arrow {
+    color: var(--lavender);
+}
+
+@media (max-width: 900px) {
+    .About {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        text-align: center;
+        padding: 2.5rem 1.5rem;
+    }
+
+    .About-kicker {
+        justify-content: center;
+    }
+
+    .About-text p {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .About-links {
+        width: 100%;
+        max-width: 22rem;
+        padding: 1.5rem 0 0;
+        border-left: 0;
+        border-top: 1px solid rgba(201, 184, 255, .2);
+        text-align: left;
+    }
+}
+</style>

@@ -16,14 +16,20 @@ const sortPostsByIndex = posts => {
 
 ---
 
-<Layout title="Vizune Designs - Avatars" heading="Vizune Avatars" description="...">
+<Layout
+  title="Vizune Designs - Avatars"
+  heading="Vizune Avatars"
+  kicker="Resources"
+  intro="Free anime avatars in three sizes. Pick a size, then filter by series or artist."
+  description="Free anime avatars in 100 x 100, 200 x 200 and 400 x 400 sizes from Vizune Designs."
+>
   <Tabs id="example-1">
     <ui-tab>100 x 100 Avatars</ui-tab>
     <ui-tab>200 x 200 Avatars</ui-tab>
     <ui-tab>400 x 400 Avatars</ui-tab>
 
     <ui-panel>
-      <AvatarCategory 
+      <AvatarCategory
         category={100}
         title="100 x 100 avatars"
         posts={sortPostsByIndex(posts100)}
@@ -32,7 +38,7 @@ const sortPostsByIndex = posts => {
       />
     </ui-panel>
     <ui-panel>
-      <AvatarCategory 
+      <AvatarCategory
         category={200}
         title="200 x 200 avatars"
         posts={sortPostsByIndex(posts200)}
@@ -41,7 +47,7 @@ const sortPostsByIndex = posts => {
       />
     </ui-panel>
     <ui-panel>
-      <AvatarCategory 
+      <AvatarCategory
         category={400}
         title="400 x 400 avatars"
         posts={sortPostsByIndex(posts400)}

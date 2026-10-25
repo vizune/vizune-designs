@@ -73,9 +73,15 @@ const labelFor = (tag: string) => tagReference[tag] ?? tag;
 
 ---
 
-<Layout title="Vizune Designs - Renders" heading="Vizune Renders" description="...">
+<Layout
+  title="Vizune Designs - Renders"
+  heading="Vizune Renders"
+  kicker="Resources"
+  intro="Cut-out anime and game character renders, ready for your own graphics."
+  description="Free anime and game character renders from Vizune Designs."
+>
 <div class="renders-list" id="render-wrapper" data-section="renders" data-renders-root>
-  <FilterDropdown>
+  <FilterDropdown label="Filter renders">
     <option value="">-- Filter Renders --</option>
     {tags.map((t) => (
       <option value={t}>
@@ -84,7 +90,7 @@ const labelFor = (tag: string) => tagReference[tag] ?? tag;
     ))}
   </FilterDropdown>
 
-  <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-grid>
+  <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" data-grid>
     {sorted.map((post) => (
       <RendersPostCard post={post} assetsById={assetsById} />
     ))}

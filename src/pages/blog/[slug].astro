@@ -1,8 +1,8 @@
 ---
 import Layout from '@/layouts/Layout.astro';
+import PostPagination from '@/components/ui/PostPagination.astro';
 import {
   fetchContentfulEntries,
-  formatUkDate,
   richTextToHtml,
   type RichTextDocument,
   type ContentfulEntry,
@@ -23,32 +23,49 @@ type BlogFields = {
   content?: RichTextDocument;
 };
 
+type PostLink = { title: string; url: string } | null;
+
 export async function getStaticPaths() {
   const { items, assets } = await fetchContentfulEntries<BlogFields>('articles');
   const assetsById = Object.fromEntries(assets.map((asset) => [asset.sys.id, asset]));
 
-  return items
+  // Oldest first, so "previous" is the older post and "next" the newer one
+  const toTime = (d?: string) => {
+    const t = d ? Date.parse(d) : NaN;
+    return Number.isFinite(t) ? t : -Infinity;
+  };
+  const posts = items
     .filter((item) => item.fields?.slug)
-    .map((item) => ({
-      params: { slug: item.fields.slug! },
-      props: {
-        entry: item,
-        assetsById,
-      },
-    }));
+    .sort((a, b) => toTime(a.fields.publishDate) - toTime(b.fields.publishDate));
+
+  const linkTo = (item?: ContentfulEntry<BlogFields>): PostLink =>
+    item ? { title: item.fields.title ?? 'Blog post', url: `/blog/${item.fields.slug}/` } : null;
+
+  return posts.map((item, i) => ({
+    params: { slug: item.fields.slug! },
+    props: {
+      entry: item,
+      assetsById,
+      prev: linkTo(posts[i - 1]),
+      next: linkTo(posts[i + 1]),
+    },
+  }));
 }
 
 const {
   entry,
   assetsById,
+  prev,
+  next,
 } = Astro.props as {
   entry: ContentfulEntry<BlogFields>;
   assetsById: Record<string, unknown>;
+  prev: PostLink;
+  next: PostLink;
 };
 
 const title = entry.fields.title ?? 'Blog post';
 const description = entry.fields.description ?? title;
-const date = formatUkDate(entry.fields.publishDate);
 const entryID = entry.sys.id;
 const bannerId = entry.fields.banner?.sys.id;
 
@@ -86,29 +103,25 @@ const pageUrl = Astro.url.href;
   title={`Vizune Designs - ${title}`}
   description={description}
   heading={title}
+  kicker="News & updates"
+  intro={entry.fields.description}
+  date={entry.fields.publishDate}
 >
-  <article class="home-article max-w-4xl mx-auto">
+  <article class="home-article">
     {
-    bannerUrl && (
-      <img
-        src={bannerUrl}
-        alt={bannerAlt}
-        class="mx-auto mb-8"
-      />
-    )
-  }
-    <div class="prose prose-invert max-w-none">
-      {date ? <span class="mb-0">📅 Published {date}</span> : null}
+      bannerUrl && (
+        <figure class="ArticleBanner">
+          <img src={bannerUrl} alt={bannerAlt} />
+        </figure>
+      )
+    }
 
-      <hr class="mt-4 mb-10" />
+    <div class="Prose" set:html={html} />
 
-      <div set:html={html} />
+    <PostPagination prev={prev} next={next} />
 
-    </div>
-
-    <hr class="my-10 border-white/10" />
-
-    <section class="mt-8">
+    <section class="Comments">
+      <h2 class="PanelHeading">Comments</h2>
       <div id="disqus_thread"></div>
       <noscript>
         Please enable JavaScript to view the comments powered by Disqus.
@@ -133,26 +146,38 @@ const pageUrl = Astro.url.href;
 </Layout>
 
 <style is:global>
-  .prose {
-    background-color: #fff;
-    color: #333;
-    border-radius: 20px;
-    padding: 1.5rem;
+  /* Banner framed like a picture on the panel */
+  .ArticleBanner {
+    max-width: 52rem;
+    margin: 0 auto 3rem;
+    padding: 5px;
+    background: linear-gradient(180deg, #1d1840, #07061a);
+    border: 1px solid rgba(201, 184, 255, .55);
+    box-shadow: inset 0 0 0 4px #07061a, 0 18px 40px rgba(27, 24, 48, .3);
   }
 
-  .prose h2 {
-    font-size: 2.75rem;
+  .ArticleBanner img {
+    display: block;
+    width: 100%;
+    height: auto;
   }
 
-  .home-article .prose .content-image {
-    margin: 2rem 0;
+  /* Keep the whole post (text and image rows) in one reading column */
+  .home-article .Prose {
+    max-width: 40rem;
+    margin: 0 auto;
+  }
+
+  /* Inline images in posts sit side by side */
+  .home-article .Prose .content-image {
     display: inline-block;
     max-width: 33%;
+    margin: 2rem 0;
+    vertical-align: top;
   }
 
-  .prose ul {
-    list-style: square;
-    padding-left: 1.25rem;
-    margin: 1rem 0;
+  .Comments {
+    max-width: 40rem;
+    margin: 4rem auto 0;
   }
 </style>

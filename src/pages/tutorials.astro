@@ -44,9 +44,11 @@ const sorted = [...items].sort(
   title="Vizune Designs - Tutorials"
   description="Tutorials and guides from Vizune Designs."
   heading="Vizune Tutorials"
+  kicker="Learn"
+  intro="Step-by-step guides for graphics and web design."
 >
   <div class="tutorials-list" data-section="tutorials">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-9" data-grid>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" data-grid>
       {sorted.map((post) => (
         <TutorialPostCard post={post} assetsById={assetsById} />
       ))}

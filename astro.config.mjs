@@ -3,6 +3,8 @@ import tailwind from '@tailwindcss/vite'
 import critters from 'astro-critters';
 
 export default defineConfig({
+  // Use classes for scoped styles so a parent's styles reach the child components it passes `class` to
+  scopedStyleStrategy: 'class',
   vite: {
     plugins: [tailwind()],
     resolve: {

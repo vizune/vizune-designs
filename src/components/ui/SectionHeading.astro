@@ -1,0 +1,65 @@
+---
+import Sparkle from '@/components/ornament/Sparkle.astro';
+const { title, subtitle } = Astro.props;
+---
+
+<div class="SectionHeading">
+  <div class="SectionHeading-row">
+    <span class="SectionHeading-line" aria-hidden="true"></span>
+    <Sparkle class="SectionHeading-star" />
+    <h2>{title}</h2>
+    <Sparkle class="SectionHeading-star" />
+    <span class="SectionHeading-line SectionHeading-line--right" aria-hidden="true"></span>
+  </div>
+  {subtitle && <p>{subtitle}</p>}
+</div>
+
+<style>
+.SectionHeading {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.SectionHeading-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .9rem;
+}
+
+h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.75rem, 3vw, 2.25rem);
+    line-height: 1.1;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #fff;
+    text-shadow: 0 0 18px rgba(167, 139, 255, .55);
+}
+
+.SectionHeading-star {
+    color: var(--lavender);
+    font-size: .9rem;
+    filter: drop-shadow(0 0 6px rgba(201, 184, 255, .9));
+}
+
+.SectionHeading-line {
+    flex: 1;
+    max-width: 14rem;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201, 184, 255, .6));
+}
+
+.SectionHeading-line--right {
+    background: linear-gradient(90deg, rgba(201, 184, 255, .6), transparent);
+}
+
+p {
+    margin-top: .5rem;
+    font-size: .7rem;
+    letter-spacing: .3em;
+    text-transform: uppercase;
+    color: var(--lavender-dim);
+}
+</style>

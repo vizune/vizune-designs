@@ -1,17 +1,423 @@
 ---
-import { NavigationLink } from '@/components';
+import Sparkle from '@/components/ornament/Sparkle.astro';
+import Moon from '@/components/ornament/Moon.astro';
 
 const nav = [
-  { page: "Home",       link: "/" },
-  { page: "Avatars",    link: "/avatars/" },
-  { page: "Renders",    link: "/renders/" },
-  { page: "PSD downloads", link: "/psd/" },
-  { page: "Templates",  link: "/templates/" },
-  { page: "Tutorials",  link: "/tutorials/" },
+  { page: "Home",      link: "/" },
+  { page: "Avatars",   link: "/avatars/" },
+  { page: "Renders",   link: "/renders/" },
+  { page: "PSDs",      link: "/psd/" },
+  { page: "Templates", link: "/templates/" },
+  { page: "Tutorials", link: "/tutorials/" },
+  { page: "Request",   link: "/request/", highlight: true },
 ];
+
+// Blog posts live on the home page, so they light up "Home"
+const path = Astro.url.pathname.replace(/\/?$/, '/');
+const isCurrent = (link: string) =>
+  link === '/' ? path === '/' || path.startsWith('/blog/') : path.startsWith(link);
 ---
-<nav class="z-0 w-full bg-raven -mt-20 md:border-indigo/60 md:border-b-2 md:border-opacity-25 flex flex-col md:flex-row items-center justify-center text-center">
-  {nav.map((item) => (
-    <NavigationLink page={item.page} link={item.link} />
-  ))}
+
+<nav class="Nav" aria-label="Main">
+  <div class="Nav-bar">
+    <span class="Nav-cap Nav-cap--left" aria-hidden="true"></span>
+    <span class="Nav-chain Nav-chain--left" aria-hidden="true"></span>
+    <span class="Nav-end Nav-end--left" aria-hidden="true">
+      <Moon class="Nav-moon" />
+    </span>
+
+    <button class="Nav-toggle" type="button" aria-expanded="false" aria-controls="main-menu" data-nav-toggle>
+      <Sparkle class="Nav-toggle-star" />
+      Menu
+    </button>
+
+    <ul id="main-menu" class="Nav-list" data-nav-list>
+      {nav.map((item) => (
+        <li class:list={[{ 'Nav-item--cta': item.highlight }]}>
+          <a
+            href={item.link}
+            class:list={['Nav-link', { 'Nav-link--cta': item.highlight }]}
+            aria-current={isCurrent(item.link) ? 'page' : undefined}
+          >
+            <Sparkle class="Nav-link-star" />
+            <span>{item.page}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <span class="Nav-end Nav-end--right" aria-hidden="true">
+      <Moon class="Nav-moon Nav-moon--flip" />
+    </span>
+    <span class="Nav-chain Nav-chain--right" aria-hidden="true"></span>
+    <span class="Nav-cap Nav-cap--right" aria-hidden="true"></span>
+  </div>
 </nav>
+
+<script is:inline>
+  (() => {
+    const toggle = document.querySelector('[data-nav-toggle]');
+    const list = document.querySelector('[data-nav-list]');
+    toggle?.addEventListener('click', () => {
+      const open = toggle.getAttribute('aria-expanded') !== 'true';
+      toggle.setAttribute('aria-expanded', String(open));
+      list?.classList.toggle('is-open', open);
+    });
+  })();
+</script>
+
+<style>
+.Nav {
+    position: relative;
+    z-index: 2;
+    padding: 0 1rem;
+    margin-top: -1.5rem;
+}
+
+/*
+ * The bar is framed by two ornamental end caps (public/nav-cap.svg) whose
+ * rails continue as the bar's top and bottom lines.
+ * Measurements from the SVG (834 x 510 units): each rail is 14 units thick,
+ * its outer edges sit 21.5 units in from the top and bottom, and the straight
+ * rail stub at the inner end is about 60 units long.
+ */
+.Nav-bar {
+    --bar-h: 4.25rem;                              /* rail-to-rail height */
+    --cap-h: calc(var(--bar-h) * 510 / 467);       /* full ornament height */
+    --cap-w: calc(var(--cap-h) * 834 / 510);
+    --rail: calc(var(--cap-h) * 14 / 510);
+    --line: #8577b5; /* solid soft lavender, so the cap and rail overlap doesn't show */
+
+    position: relative;
+    max-width: 1260px;
+    height: var(--bar-h);
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 0 calc(var(--cap-w) * .92);
+}
+
+/* Background and rails between the caps */
+.Nav-bar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(var(--cap-w) - var(--cap-w) * 60 / 834);
+    right: calc(var(--cap-w) - var(--cap-w) * 60 / 834);
+    z-index: -1;
+    border-top: var(--rail) solid var(--line);
+    border-bottom: var(--rail) solid var(--line);
+    background: linear-gradient(180deg, rgba(22, 16, 54, .92), rgba(9, 7, 26, .96));
+    box-shadow: 0 10px 40px rgba(0, 0, 0, .6), 0 0 30px rgba(123, 92, 255, .18);
+}
+
+.Nav-cap {
+    position: absolute;
+    top: calc(var(--cap-h) * -21.5 / 510);
+    width: var(--cap-w);
+    height: var(--cap-h);
+    background: var(--line);
+    -webkit-mask: url('/nav-cap.svg') center / 100% 100% no-repeat;
+    mask: url('/nav-cap.svg') center / 100% 100% no-repeat;
+    pointer-events: none;
+}
+
+.Nav-cap--left {
+    left: 0;
+}
+
+.Nav-cap--right {
+    right: 0;
+    transform: scaleX(-1);
+}
+
+/* Crescent moons just inside the bar where the caps end */
+.Nav-end {
+    position: absolute;
+    top: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-top: -.75rem;
+    color: var(--lavender);
+    filter: drop-shadow(0 0 6px rgba(201, 184, 255, .8));
+    pointer-events: none;
+}
+
+.Nav-end--left {
+    left: calc(var(--cap-w) + .1rem);
+}
+
+.Nav-end--right {
+    right: calc(var(--cap-w) + .1rem);
+}
+
+.Nav-moon {
+    font-size: 1.35rem;
+}
+
+.Nav-moon--flip {
+    transform: scaleX(-1);
+}
+
+/* Chains with a gem, hanging from the outer tips of the caps */
+.Nav-chain {
+    position: absolute;
+    top: calc(50% + .5rem);
+    width: 9px;
+    height: calc(3.25rem + 16px);
+    pointer-events: none;
+}
+
+.Nav-chain--left {
+    left: calc(.15rem - 4px);
+}
+
+.Nav-chain--right {
+    right: calc(.15rem - 4px);
+}
+
+.Nav-chain::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 4px;
+    width: 1px;
+    height: 3.25rem;
+    background: repeating-linear-gradient(180deg, rgba(201, 184, 255, .7) 0 2px, transparent 2px 5px);
+}
+
+.Nav-chain::before {
+    content: '';
+    position: absolute;
+    top: 3.25rem;
+    left: 0;
+    width: 9px;
+    height: 13px;
+    background: linear-gradient(160deg, #fff, var(--lavender) 40%, var(--violet));
+    clip-path: polygon(50% 0, 100% 40%, 50% 100%, 0 40%);
+    filter: drop-shadow(0 0 4px rgba(201, 184, 255, .9));
+}
+
+.Nav-list {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+}
+
+.Nav-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: .45rem;
+    padding: 1rem clamp(.55rem, 1.2vw, 1.2rem);
+    font-family: var(--font-display);
+    font-size: 1rem;
+    letter-spacing: .1em;
+    white-space: nowrap;
+    text-transform: uppercase;
+    color: #cfc6f5;
+    transition: color .25s ease, text-shadow .25s ease;
+}
+
+.Nav-link-star {
+    font-size: .7rem;
+    color: #fff;
+    opacity: 0;
+    transform: scale(.4) rotate(-45deg);
+    transition: opacity .3s ease, transform .4s cubic-bezier(.2, .9, .3, 1.4);
+    margin-left: -1.15rem;
+    filter: drop-shadow(0 0 5px var(--lavender));
+}
+
+.Nav-link::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: .55rem;
+    width: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--lavender), transparent);
+    transform: translateX(-50%);
+    transition: width .35s ease;
+}
+
+.Nav-link:hover,
+.Nav-link:focus-visible {
+    color: #fff;
+    text-shadow: 0 0 12px rgba(201, 184, 255, .8);
+}
+
+.Nav-link:hover::after,
+.Nav-link:focus-visible::after {
+    width: 60%;
+}
+
+.Nav-link[aria-current="page"] {
+    color: #fff;
+    text-shadow: 0 0 10px #fff, 0 0 22px var(--glow), 0 0 40px var(--glow);
+}
+
+.Nav-link[aria-current="page"] .Nav-link-star {
+    opacity: 1;
+    transform: none;
+    margin-left: 0;
+}
+
+.Nav-link[aria-current="page"]::after {
+    width: 70%;
+}
+
+.Nav-toggle {
+    display: none;
+}
+
+/* "Request" call-to-action: rose-pink outlined pill so it stands apart from the page links */
+.Nav-item--cta {
+    display: flex;
+    align-items: center;
+    margin-left: .5rem;
+}
+
+.Nav-link--cta {
+    --rose: #ff6fb5;
+    padding: .45rem 1.1rem;
+    color: #ffd9ec;
+    border: 1px solid rgba(255, 111, 181, .6);
+    border-radius: 999px;
+    background: linear-gradient(180deg, rgba(255, 77, 166, .16), rgba(255, 77, 166, .04));
+    box-shadow: 0 0 14px rgba(255, 77, 166, .25), inset 0 0 10px rgba(255, 77, 166, .12);
+    transition: color .25s ease, box-shadow .25s ease, background .25s ease, transform .25s ease;
+}
+
+.Nav-link--cta .Nav-link-star {
+    opacity: 1;
+    transform: none;
+    margin-left: 0;
+    color: var(--rose);
+    filter: drop-shadow(0 0 5px var(--rose));
+}
+
+.Nav-link--cta::after {
+    display: none;
+}
+
+.Nav-link--cta:hover,
+.Nav-link--cta:focus-visible,
+.Nav-link--cta[aria-current="page"] {
+    color: #fff;
+    transform: translateY(-1px);
+    background: linear-gradient(180deg, rgba(255, 77, 166, .3), rgba(255, 77, 166, .1));
+    box-shadow: 0 0 24px rgba(255, 77, 166, .55), inset 0 0 12px rgba(255, 77, 166, .2);
+    text-shadow: 0 0 10px rgba(255, 150, 200, .8);
+}
+
+
+/* Mid-size screens: tighten so all the links fit on one line */
+@media (max-width: 1320px) {
+    .Nav-link {
+        font-size: .92rem;
+        letter-spacing: .07em;
+        padding-left: clamp(.4rem, .8vw, .8rem);
+        padding-right: clamp(.4rem, .8vw, .8rem);
+    }
+
+    .Nav-link--cta {
+        padding: .4rem .85rem;
+    }
+}
+
+@media (max-width: 1080px) {
+    .Nav {
+        margin-top: -1.75rem;
+    }
+
+    .Nav-bar {
+        --bar-h: 3.5rem;
+    }
+
+    .Nav-end {
+        width: 1.2rem;
+        margin-top: -.6rem;
+    }
+
+    .Nav-end--left { left: calc(var(--cap-w) + .05rem); }
+    .Nav-end--right { right: calc(var(--cap-w) + .05rem); }
+
+    .Nav-moon {
+        font-size: 1.05rem;
+    }
+
+    .Nav-chain::after {
+        height: 2.25rem;
+    }
+
+    .Nav-chain::before {
+        top: 2.25rem;
+    }
+
+    .Nav-toggle {
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+        padding: .85rem .5rem;
+        font-family: var(--font-display);
+        font-size: 1.15rem;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+        color: #fff;
+    }
+
+    .Nav-toggle-star {
+        font-size: .75rem;
+        color: var(--lavender);
+        transition: transform .3s ease;
+    }
+
+    .Nav-toggle[aria-expanded="true"] .Nav-toggle-star {
+        transform: rotate(45deg);
+    }
+
+    /* Open menu drops down as a panel under the railed bar */
+    .Nav-list {
+        position: absolute;
+        top: calc(100% + .5rem);
+        left: calc(var(--cap-w) * .45);
+        right: calc(var(--cap-w) * .45);
+        display: none;
+        grid-template-columns: 1fr 1fr;
+        padding: .5rem .5rem .9rem;
+        background: linear-gradient(180deg, #161036, #09071a);
+        border: 1px solid rgba(201, 184, 255, .35);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, .6);
+    }
+
+    .Nav-list.is-open {
+        display: grid;
+    }
+
+    .Nav-link {
+        padding: .7rem .5rem .7rem 1.4rem;
+    }
+
+    .Nav-link::after {
+        display: none;
+    }
+
+    .Nav-item--cta {
+        grid-column: 1 / -1;
+        justify-content: center;
+        margin: .5rem 0 0;
+    }
+
+    .Nav-link--cta {
+        padding: .6rem 1.5rem;
+    }
+}
+</style>

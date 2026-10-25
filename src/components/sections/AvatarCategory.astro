@@ -95,9 +95,9 @@ function resolveAsset(post: Post) {
 
 
 <div class="avatar-list mb-8" data-category={category}>
-  <h2 class="text-center text-dark my-8">{title}</h2>
+  <h2 class="PanelHeading mt-6">{title}</h2>
 
-  <FilterDropdown>
+  <FilterDropdown label={`Filter ${title}`}>
     <option value="">-- Filter {title} --</option>
     {tags.map((t) => (
       <option value={t}>

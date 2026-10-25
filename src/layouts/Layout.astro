@@ -1,14 +1,16 @@
 ---
-import { Header, Navigation, Body, Footer, IconSprite } from '@/components';
-import "../assets/style.css";
-const { title, description, heading } = Astro.props;
-
-import Header2560 from '@/assets/header-large.png';
-import Header1920 from '@/assets/header.jpg';
-import Header1600 from '@/assets/header-1600.png';
-import Header1200 from '@/assets/header-1200.png';
-import Header768 from '@/assets/header-768.png';
+import IconSprite from '@/components/ui/IconSprite.astro';
+import Header from '@/components/layout/Header.astro';
+import Navigation from '@/components/layout/Navigation.astro';
+import Body from '@/components/layout/Body.astro';
+import Footer from '@/components/layout/Footer.astro';
+import Chatbox from '@/components/layout/Chatbox.astro';
 import CookieBanner from '@/components/layout/CookieBanner.astro';
+import "../assets/style.css";
+
+// `kicker`, `intro` and `date` are optional extras for the page heading.
+// Content in the "after" slot sits below the light panel, on the night sky.
+const { title, description, heading, kicker, intro, date } = Astro.props;
 ---
 
 <!doctype html>
@@ -16,14 +18,12 @@ import CookieBanner from '@/components/layout/CookieBanner.astro';
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+		<link rel="icon" href="/favicon.ico" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
-			rel="preload"
-			as="image"
-			href={Header2560.src}
-			imagesrcset={`${Header768.src} 768w, ${Header1200.src} 1200w, ${Header1600.src} 1600w, ${Header1920.src} 1920w`}
-			imagesizes="100vw"
-			fetchpriority="high"
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Forum&family=Mulish:ital,wght@0,400;0,700;1,400&display=swap"
 		/>
 		<meta name="generator" content={Astro.generator} />
 		<title>{ title }</title>
@@ -33,10 +33,12 @@ import CookieBanner from '@/components/layout/CookieBanner.astro';
 		<IconSprite />
 		<Header />
 		<Navigation />
-		<Body heading={heading}>
+		<Body heading={heading} kicker={kicker} intro={intro} date={date}>
 			<slot />
 		</Body>
+		<slot name="after" />
 		<Footer />
+		<Chatbox />
 		<CookieBanner />
 	</body>
 </html>

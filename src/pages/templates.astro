@@ -43,12 +43,14 @@ const sorted = [...items].sort(
 );
 ---
 
-<Layout title="Vizune Designs - Templates" heading="Vizune Templates" description="...">
+<Layout
+  title="Vizune Designs - Templates"
+  heading="Vizune Templates"
+  kicker="Resources"
+  intro="Free website templates. Explore the spread and select a card to reveal its details."
+  description="Free website templates from Vizune Designs."
+>
   <section class="relative pb-10" data-tarot-root>
-    <div class="text-center mb-8">
-      <p class="mb-3 text-white/70 text-sm">Explore the template spread • Select a card to reveal its details</p>
-    </div>
-
     <div class="mx-auto max-w-6xl px-4">
       <div class="relative min-h-[560px] flex flex-col items-center justify-center gap-2">
         <div
@@ -65,16 +67,13 @@ const sorted = [...items].sort(
             type="button"
             aria-label="Previous templates"
             data-prev
-            class="h-18 w-18 rounded-full border border-white/20 bg-black/40
-                  text-white/90 backdrop-blur-md hover:border-white/50 transition
-                  disabled:opacity-40 disabled:cursor-not-allowed
-                  flex items-center justify-center"
+            class="Btn h-16 w-16 !p-0 rounded-full"
           >
             <img
               src={arrowPng.src}
               alt=""
               aria-hidden="true"
-              class="w-[45px] h-[30px] rotate-180"
+              class="w-[36px] h-[24px] rotate-180"
             />
           </button>
 
@@ -82,30 +81,27 @@ const sorted = [...items].sort(
             type="button"
             aria-label="Next templates"
             data-next
-            class="h-18 w-18 rounded-full border border-white/20 bg-black/40
-                  text-white/90 backdrop-blur-md transition hover:border-white/50
-                  disabled:opacity-40 disabled:cursor-not-allowed
-                  flex items-center justify-center"
+            class="Btn h-16 w-16 !p-0 rounded-full"
           >
             <img
               src={arrowPng.src}
               alt=""
               aria-hidden="true"
-              class="w-[45px] h-[30px]"
+              class="w-[36px] h-[24px]"
             />
           </button>
         </div>
       </div>
 
       <div
-        class="mx-auto max-w-6xl rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md shadow-lg shadow-black/30 overflow-hidden"
+        class="Card mx-auto max-w-5xl p-3"
         data-template-details
       >
         <div class="grid md:grid-cols-[1fr_360px]">
-          <div class="p-5 md:p-6 text-white/90 space-y-2" data-template-meta></div>
+          <div class="Card-meta p-5 md:p-6 space-y-1" data-template-meta></div>
 
           <div
-            class="border-t md:border-t-0 md:border-l border-white/10 grid gap-px bg-white/10"
+            class="border-t md:border-t-0 md:border-l border-lavender/20 grid content-center gap-px bg-lavender/15"
             data-template-links
           ></div>
         </div>
@@ -153,11 +149,12 @@ const sorted = [...items].sort(
           const downloadUrl = card.dataset.downloadUrl || '';
 
           meta.innerHTML = `
-            ${publishDate ? `<p><strong>Publish Date:</strong> ${formatUkDate(publishDate)}</p>` : ''}
-            ${techStack ? `<p><strong>Tech Stack:</strong> ${techStack}</p>` : ''}
-            ${category ? `<p><strong>Category:</strong> ${category}</p>` : ''}
-            ${series ? `<p><strong>Series:</strong> ${series}</p>` : ''}
-            ${character ? `<p><strong>Character:</strong> ${character}</p>` : ''}
+            <h2 class="Card-title mb-3">${card.dataset.title || ''}</h2>
+            ${publishDate ? `<p><span class="Kicker inline-flex">Published</span> ${formatUkDate(publishDate)}</p>` : ''}
+            ${techStack ? `<p><span class="Kicker inline-flex">Tech stack</span> ${techStack}</p>` : ''}
+            ${category ? `<p><span class="Kicker inline-flex">Category</span> ${category}</p>` : ''}
+            ${series ? `<p><span class="Kicker inline-flex">Series</span> ${series}</p>` : ''}
+            ${character ? `<p><span class="Kicker inline-flex">Character</span> ${character}</p>` : ''}
           `;
 
           const items = [
@@ -173,11 +170,11 @@ const sorted = [...items].sort(
               rel="noopener noreferrer"
               data-template-action="${item.action}"
               class="flex items-center justify-between gap-4
-                    bg-white/5 px-4 py-5 text-white/90
-                    hover:bg-white/15 hover:text-white transition"
+                    bg-[#0c0a22] px-5 py-5 font-display text-lg tracking-[.14em] uppercase text-[#ddd6f7]
+                    hover:bg-[#1d1840] hover:text-white transition"
             >
               <span>${item.label}</span>
-              <span aria-hidden="true" class="text-white/60 [&_svg]:h-5 [&_svg]:w-5">
+              <span aria-hidden="true" class="text-lavender [&_svg]:h-4 [&_svg]:w-4">
                 ${newTabIcon}
               </span>
             </a>

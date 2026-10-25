@@ -1,79 +1,687 @@
 @import "tailwindcss";
 
-/* 
-  Colour name generator for funsies: 
-  https://colornamer.robertcooper.me/
+/*
+  Obelisk: Nocturna theme.
 
-  Hex to oklch converter:
-  https://openreplay.com/tools/hex-to-oklch/ 
+  Colour name generator for funsies:
+  https://colornamer.robertcooper.me/
 */
 @theme {
   --color-hynacinth: oklch(54.75% 0.192 287.43); /* #6f55d8  */
-  --color-lavender: oklch(60.70% 0.215 275.60); /* #646cff */
+  --color-lavender: #c9b8ff;
   --color-indigo: oklch(27.37% 0.158 282.00); /* #240470 */
   --color-orchid: oklch(61.06% 0.227 289.34); /* #865eff */
   --color-raven: oklch(7.08% 0.038 299.60); /* #020007 */
   --color-clay: oklch(95.45% 0.024 296.12); /* #f1edff */
+  --color-midnight: #030309;
+  --color-night: #05040f;
+  --color-ink: #1b1830;
+  --color-violet: #7b5cff;
+  --color-carmine: #9e3a72;
+  --color-purple: #4b3aa8;
+
+  --font-body: "Mulish", system-ui, sans-serif;
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-logo: "Forum", Georgia, serif;
 }
 
-:root {
-  font-family: 'Dosis', sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+/* Theme styles sit in the components layer so Tailwind utilities (e.g. `hidden`) still win */
+@layer components {
 
-  color-scheme: light dark;
-  color: --color-raven;
-  background-color: #03050f;
+:root {
+  --midnight: #030309;
+  --night: #05040f;
+  --ink: #1b1830;
+  --lavender: #c9b8ff;
+  --lavender-dim: #9c90c9;
+  --violet: #7b5cff;
+  --glow: #a78bff;
+  --carmine: #9e3a72; /* plum rose: links */
+  --purple: #4b3aa8;  /* deep violet: accents on the light panel */
+  --ice: #bbffff;
+
+  --font-body: "Mulish", system-ui, sans-serif;
+  --font-display: "Cormorant Garamond", Georgia, serif;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
 
-@font-face {
-  font-family: "Dosis";
-  src: url("/fonts/Dosis-VariableFont_wght.ttf") format("truetype");
-  font-weight: 200 800;
-  font-style: normal;
-  font-display: swap;
+html {
+  scroll-behavior: smooth;
+  background-color: var(--night);
 }
 
 body {
+  position: relative;
+  min-height: 100vh;
   margin: 0;
   overflow-x: hidden;
+  background-color: var(--night);
+  background-image:
+    radial-gradient(ellipse 60% 40% at 10% 30%, rgba(123, 92, 255, .16), transparent),
+    radial-gradient(ellipse 50% 35% at 90% 55%, rgba(230, 0, 115, .09), transparent),
+    radial-gradient(ellipse 80% 40% at 50% 100%, rgba(80, 60, 200, .22), transparent);
+  color: #e9e6f7;
+  font-family: var(--font-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-h1 {
-  font-size: 2.5rem;
-  line-height: 1.1;
-  position: relative;
-  white-space: no-wrap;
-  text-align: center;
+/* Starfield: tiled layers of tiny dots behind everything */
+body::before,
+body::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
 }
 
+body::before {
+  background-image:
+    radial-gradient(1px 1px at 20px 30px, #fff, transparent),
+    radial-gradient(1px 1px at 140px 90px, rgba(255, 255, 255, .8), transparent),
+    radial-gradient(1.5px 1.5px at 90px 170px, #d9cfff, transparent),
+    radial-gradient(1px 1px at 200px 220px, rgba(255, 255, 255, .7), transparent);
+  background-size: 240px 260px;
+  opacity: .55;
+}
 
-@media(min-width: 768px) {
-  h1 {
-    font-size: 3.5rem;
+body::after {
+  background-image:
+    radial-gradient(1.5px 1.5px at 60px 60px, #fff, transparent),
+    radial-gradient(1px 1px at 300px 140px, #ffd6ec, transparent),
+    radial-gradient(2px 2px at 220px 330px, rgba(201, 184, 255, .9), transparent);
+  background-size: 380px 420px;
+  animation: twinkle 6s ease-in-out infinite alternate;
+}
+
+@keyframes twinkle {
+  from { opacity: .25; }
+  to { opacity: .8; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
   }
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-weight: 300;
+::selection {
+  background: var(--violet);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--lavender);
+  outline-offset: 3px;
+}
+
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+/* ---------- Page sections on the dark background ---------- */
+
+.Section {
+  max-width: 1180px;
+  margin: 5rem auto 0;
+  padding: 0 1rem;
+}
+
+/* ---------- Reading typography inside the light content panel ---------- */
+
+.Prose {
+  color: var(--ink);
+  font-size: 1rem;
+  line-height: 1.8;
+
+  /* Keep text at a comfortable reading width (~70 characters) */
+  > * {
+    max-width: 40rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  a {
+    color: var(--carmine);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  p,
+  li {
+    /* Avoid a single word left alone on the last line (a widow) */
+    text-wrap: pretty;
+  }
+
+  p {
+    margin-bottom: 1.25rem;
+  }
+
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  strong {
+    font-weight: 700;
+    color: var(--midnight);
+  }
+
+  /* Divider: the traced flourish SVG, coloured from CSS */
+  hr {
+    background: var(--midnight);
+    -webkit-mask: url('/divider.svg') center / contain no-repeat;
+    mask: url('/divider.svg') center / contain no-repeat;
+    height: 60px;
+    width: 67px;
+    border: none;
+    margin: 1.75rem auto 2rem;
+  }
+
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 2.1rem;
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--midnight);
+    margin-top: 2.25rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: .6rem;
+    background: linear-gradient(90deg, var(--midnight), rgba(123, 92, 255, .5) 40%, transparent) bottom left / 100% 1px no-repeat;
+  }
+
+  > h2:first-child {
+    margin-top: 0;
+  }
+
+  h3 {
+    color: var(--purple);
+    font-size: .95rem;
+    line-height: 2rem;
+    text-transform: uppercase;
+    letter-spacing: .14em;
+    margin: 1.6rem 0 .6rem;
+    font-weight: 700;
+  }
+
+  > h3 {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.35rem;
+    color: var(--midnight);
+    margin: 1.4rem 0 .5rem;
+  }
+
+  /* Lists: glass orb bullets */
+  ul {
+    margin-bottom: 1.25rem;
+    padding: 0;
+    list-style: none;
+
+    li {
+      position: relative;
+      padding-left: 1.85rem;
+      margin-bottom: .45rem;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: .42em;
+        width: 1rem;
+        height: 1rem;
+        background: url('/orb.webp') center / contain no-repeat;
+        filter: drop-shadow(0 1px 3px rgba(75, 58, 168, .35));
+      }
+    }
+
+    /* Nested lists get smaller orbs */
+    ul {
+      margin: .45rem 0 0;
+
+      li {
+        padding-left: 1.5rem;
+
+        &::before {
+          top: .5em;
+          width: .75rem;
+          height: .75rem;
+        }
+      }
+    }
+  }
+
+  ol {
+    margin-bottom: 1.25rem;
+    padding-left: 1.5rem;
+    list-style: decimal;
+
+    li {
+      margin-bottom: .45rem;
+      padding-left: .35rem;
+
+      &::marker {
+        font-family: var(--font-display);
+        font-weight: 600;
+        color: var(--purple);
+      }
+    }
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Quote: lavender card with a large drawn quotation mark and a violet accent edge */
+  blockquote {
+    position: relative;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    padding: 1.75rem 2rem 1.5rem 5rem;
+    background:
+      radial-gradient(ellipse at 0% 0%, rgba(167, 139, 255, .22), transparent 60%),
+      linear-gradient(135deg, rgba(201, 184, 255, .2), rgba(201, 184, 255, .06));
+    border: 1px solid rgba(123, 92, 255, .22);
+
+    /* Accent edge on the left, fading out towards the bottom */
+    &::after {
+      content: '';
+      position: absolute;
+      top: -1px;
+      bottom: -1px;
+      left: -1px;
+      width: 3px;
+      background: linear-gradient(180deg, var(--purple), var(--violet) 60%, rgba(123, 92, 255, .15));
+    }
+
+    /* Large opening quotation mark */
+    &::before {
+      content: '\201C';
+      position: absolute;
+      top: .5rem;
+      left: 1.1rem;
+      font-family: var(--font-display);
+      font-size: 5.5rem;
+      font-weight: 600;
+      line-height: 1;
+      background: linear-gradient(180deg, var(--purple), var(--violet));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    p {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-style: italic;
+      font-weight: 500;
+      line-height: 1.45;
+      color: var(--ink);
+      margin-bottom: .9rem;
+    }
+
+    > span,
+    footer {
+      display: block;
+      font-family: var(--font-body);
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: #5b4f99;
+
+      &::before {
+        content: '';
+        display: inline-block;
+        vertical-align: middle;
+        width: 1.75rem;
+        height: 1px;
+        margin: -.15em .65rem 0 0;
+        background: var(--violet);
+      }
+    }
+
+    cite {
+      font-style: normal;
+      color: var(--purple);
+    }
+  }
+
+  /* Code: dark night-sky blocks on the light panel */
+  pre {
+    position: relative;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    padding: 2.5rem 1.5rem 1.5rem;
+    overflow-x: auto;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(123, 92, 255, .18), transparent 60%),
+      linear-gradient(180deg, #161036, #09071a);
+    border: 1px solid rgba(201, 184, 255, .35);
+    box-shadow: inset 0 0 0 4px #09071a, inset 0 0 0 5px rgba(201, 184, 255, .15), 0 10px 30px rgba(27, 24, 48, .3);
+
+    /* Three small sparkles in the top bar */
+    &::before {
+      content: '\2726  \2726  \2726';
+      position: absolute;
+      top: .7rem;
+      left: 1rem;
+      font-size: .6rem;
+      letter-spacing: .1em;
+      color: var(--lavender);
+      white-space: pre;
+    }
+
+    code {
+      display: block;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: .9rem;
+      line-height: 1.7;
+      color: #e6e1ff;
+      white-space: pre;
+      background: none;
+      padding: 0;
+    }
+  }
+
+  code {
+    padding: .1rem .4rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: .88em;
+    color: var(--purple);
+    background: rgba(123, 92, 255, .1);
+    border: 1px solid rgba(123, 92, 255, .18);
+  }
+
+  .content-image {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+
+    img {
+      display: block;
+      margin: 0 auto;
+      border: 1px solid rgba(75, 58, 168, .25);
+      box-shadow: 0 10px 30px rgba(27, 24, 48, .2);
+    }
+
+    figcaption {
+      margin-top: .75rem;
+      font-size: .85rem;
+      text-align: center;
+      color: #5b4f99;
+    }
+  }
+}
+
+/* ---------- Kicker: small uppercase label ---------- */
+
+.Kicker {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-family: var(--font-body);
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .26em;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  color: #f2a7d0;
 }
 
-p { 
-  margin-bottom: 1rem;
+.Kicker-star {
+  color: #fff;
+  font-size: .8rem;
+  filter: drop-shadow(0 0 4px var(--lavender));
 }
 
-a:not(.Button):not(.card) {
-  text-decoration: underline;
+/* ---------- Dark ornamental card ---------- */
+
+.Card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  color: #e9e6f7;
+  background: linear-gradient(180deg, rgba(24, 18, 58, .96), rgba(8, 6, 24, .98));
+  border: 1px solid rgba(201, 184, 255, .3);
+  box-shadow: 0 10px 30px rgba(27, 24, 48, .25);
+  transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+
+  /* Ornamental inner frame: four corner brackets */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    pointer-events: none;
+    z-index: 1;
+    --c: rgba(201, 184, 255, .75);
+    background:
+      linear-gradient(var(--c), var(--c)) top left / 18px 1px,
+      linear-gradient(var(--c), var(--c)) top left / 1px 18px,
+      linear-gradient(var(--c), var(--c)) top right / 18px 1px,
+      linear-gradient(var(--c), var(--c)) top right / 1px 18px,
+      linear-gradient(var(--c), var(--c)) bottom left / 18px 1px,
+      linear-gradient(var(--c), var(--c)) bottom left / 1px 18px,
+      linear-gradient(var(--c), var(--c)) bottom right / 18px 1px,
+      linear-gradient(var(--c), var(--c)) bottom right / 1px 18px;
+    background-repeat: no-repeat;
+  }
 }
 
-a:hover {
-  text-decoration: none;
+.Card--hover:hover,
+.Card--hover:focus-within {
+  transform: translateY(-4px);
+  border-color: rgba(201, 184, 255, .7);
+  box-shadow: 0 0 0 1px rgba(201, 184, 255, .25), 0 0 34px rgba(167, 139, 255, .45), 0 0 80px rgba(123, 92, 255, .2);
 }
+
+.Card-media {
+  overflow: hidden;
+  border: 1px solid rgba(201, 184, 255, .25);
+  background: rgba(8, 6, 24, .8);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .6s ease;
+  }
+}
+
+.Card--hover:hover .Card-media img {
+  transform: scale(1.05);
+}
+
+.Card-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.6rem;
+  line-height: 1.15;
+  color: #efe8ff;
+}
+
+.Card-text {
+  font-size: .9rem;
+  line-height: 1.65;
+  color: #b3abd3;
+}
+
+.Card-more {
+  font-size: .7rem;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.Card--hover:hover .Card-more {
+  text-shadow: 0 0 10px var(--lavender);
+}
+
+/* Label / value pairs inside a card */
+.Card-meta {
+  font-size: .85rem;
+  line-height: 1.7;
+  color: #c9c2e6;
+
+  dt {
+    display: inline;
+    font-size: .65rem;
+    font-weight: 700;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--lavender-dim);
+  }
+
+  dd {
+    display: inline;
+    margin: 0 0 0 .35rem;
+
+    &::after {
+      content: '';
+      display: block;
+    }
+  }
+}
+
+/* ---------- Shared button ---------- */
+
+.Btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .75rem;
+  padding: .85rem 1.75rem;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: #fff !important;
+  text-decoration: none !important;
+  background: linear-gradient(180deg, #1d1840, #07061a);
+  border: 1px solid rgba(201, 184, 255, .55);
+  box-shadow: inset 0 0 0 3px #07061a, inset 0 0 0 4px rgba(201, 184, 255, .25), 0 6px 20px rgba(27, 24, 48, .35);
+  transition: box-shadow .25s ease, transform .25s ease, opacity .25s ease;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: inset 0 0 0 3px #07061a, inset 0 0 0 4px rgba(201, 184, 255, .5), 0 0 24px rgba(123, 92, 255, .55);
+  }
+
+  &:disabled {
+    opacity: .35;
+    cursor: not-allowed;
+  }
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+  }
+}
+
+.Btn--small {
+  padding: .6rem 1.15rem;
+  font-size: .9rem;
+  letter-spacing: .16em;
+}
+
+/* ---------- Form fields on the light panel ---------- */
+
+.Field {
+  height: 3rem;
+  width: 100%;
+  padding: 0 2.75rem 0 1rem;
+  appearance: none;
+  font-family: var(--font-body);
+  font-size: .95rem;
+  color: var(--ink);
+  background: rgba(255, 255, 255, .7);
+  border: 1px solid rgba(75, 58, 168, .35);
+  box-shadow: inset 0 0 0 3px #f4f2fa, inset 0 0 0 4px rgba(123, 92, 255, .12);
+  transition: border-color .2s ease, box-shadow .2s ease;
+
+  &:hover {
+    border-color: rgba(75, 58, 168, .6);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--violet);
+    box-shadow: inset 0 0 0 3px #f4f2fa, inset 0 0 0 4px rgba(123, 92, 255, .3), 0 0 16px rgba(123, 92, 255, .25);
+  }
+}
+
+/* ---------- Small heading inside the light panel ---------- */
+
+.PanelHeading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .9rem;
+  margin: 0 auto 1.5rem;
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.6rem, 3vw, 2rem);
+  line-height: 1.15;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--midnight);
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    max-width: 10rem;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(75, 58, 168, .55));
+  }
+
+  &::after {
+    background: linear-gradient(90deg, rgba(75, 58, 168, .55), transparent);
+  }
+}
+
+.PanelIntro {
+  max-width: 40rem;
+  margin: -.75rem auto 2rem;
+  text-align: center;
+  color: #4a4566;
+  line-height: 1.7;
+  text-wrap: pretty;
+}
+
+@media (max-width: 640px) {
+  .Prose {
+    h2 { font-size: 1.7rem; }
+
+    blockquote {
+      padding: 1.5rem 1.25rem 1.25rem 3.5rem;
+
+      &::before {
+        font-size: 4rem;
+        left: .7rem;
+      }
+
+      p { font-size: 1.2rem; }
+    }
+  }
+}
+
+} /* end @layer components */

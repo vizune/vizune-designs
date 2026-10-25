@@ -82,100 +82,85 @@ const linkExchangeButtons = [
   title="Vizune Designs - Link Exchange"
   description="Link exchange and affiliate buttons for Vizune Designs."
   heading="Link Exchange"
+  kicker="Kindred sites"
+  intro="Buttons to link back to Vizune, and the sites I exchange links with."
 >
-  <section class="space-y-10">
-    <div>
-      <h2 class="mb-3">Vizune Link Buttons</h2>
-      <p class="text-white/75 mb-5">
-        Feel free to use one of my buttons if you would like to link back to Vizune. Please don't direct link and save to your own server.
-      </p>
-
-      <div class="grid gap-4 sm:grid-cols-3 max-w-xl">
-        <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md shadow-lg p-4 flex items-center justify-center">
-          <img
-            src={vizuneButton03.src}
-            alt="Vizune link button version 3"
-            width="88"
-            height="31"
-            class="image-rendering-pixelated"
-          />
-        </div>
-
-        <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md shadow-lg p-4 flex items-center justify-center">
-          <img
-            src={vizuneButton01.src}
-            alt="Vizune link button version 1"
-            width="88"
-            height="31"
-            class="image-rendering-pixelated"
-          />
-        </div>
-
-        <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md shadow-lg p-4 flex items-center justify-center">
-          <img
-            src={vizuneButton02.src}
-            alt="Vizune link button version 2"
-            width="88"
-            height="31"
-            class="image-rendering-pixelated"
-          />
-        </div>
-      </div>
-    </div>
-
-    <h2 class="mb-3">Link Exchanges</h2>
-    <p class="text-white/75 mb-6">
-      If you would like your website link or button featured below, drop me a message in the chat box.
+  <section class="Prose">
+    <h2>Vizune link buttons</h2>
+    <p>
+      Feel free to use one of my buttons if you would like to link back to Vizune. Please don't direct link and save to your own server.
     </p>
 
-    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-      {linkExchangeButtons.map((button) => (
-        <a
-          href={button.url}
-          title={button.name}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="block rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md shadow-lg p-5
-                hover:border-white/20 hover:bg-white/[0.07] hover:text-lavender transition group"
-        >
-          <article>
-            <h3 class="text-base font-semibold text-center mb-4">
-              {button.name}
-            </h3>
-
-            <div
-              class="flex items-center justify-center rounded-xl border border-white/10
-                    bg-black/20 min-h-[92px] group-hover:bg-black/30 transition"
-            >
-              <img
-                src={button.image.src}
-                alt={`${button.name} button`}
-                width="88"
-                height="31"
-                class="[image-rendering:pixelated]"
-              />
-            </div>
-          </article>
-        </a>
+    <div class="LinkButtons">
+      {[vizuneButton03, vizuneButton01, vizuneButton02].map((button, i) => (
+        <span class="LinkButtons-item">
+          <img
+            src={button.src}
+            alt={`Vizune link button version ${[3, 1, 2][i]}`}
+            width="88"
+            height="31"
+            class="[image-rendering:pixelated]"
+          />
+        </span>
       ))}
     </div>
 
-    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      {linkExchangeList.map((link) => (
-        <a
-          href={link.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="text-white text-lg text-center font-medium hover:text-lavender transition"
-        >
-          <article
-            class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md shadow-lg p-5
-                    hover:border-white/20 hover:bg-white/[0.07] transition"
-          >
-            {link.name}
-          </article>
-        </a>
-      ))}
-    </div>
+    <h2>Link exchanges</h2>
+    <p>
+      If you would like your website link or button featured below, drop me a message in the chat box.
+    </p>
   </section>
+
+  <div class="grid gap-5 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 max-w-5xl mx-auto mt-8">
+    {linkExchangeButtons.map((button) => (
+      <a
+        href={button.url}
+        title={button.name}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="Card Card--hover items-center p-4 text-center"
+      >
+        <span class="flex items-center justify-center w-full min-h-[64px] border border-lavender/20 bg-[#08061a]">
+          <img
+            src={button.image.src}
+            alt={`${button.name} button`}
+            width="88"
+            height="31"
+            class="[image-rendering:pixelated]"
+          />
+        </span>
+        <span class="Card-title mt-3 text-[1.1rem]">{button.name}</span>
+      </a>
+    ))}
+  </div>
+
+  <div class="flex flex-wrap justify-center gap-4 max-w-5xl mx-auto mt-6">
+    {linkExchangeList.map((link) => (
+      <a
+        href={link.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="Btn Btn--small"
+      >
+        {link.name}
+      </a>
+    ))}
+  </div>
 </Layout>
+
+<style>
+  .Prose > .LinkButtons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .LinkButtons-item {
+    display: flex;
+    padding: 4px;
+    background: linear-gradient(180deg, #1d1840, #07061a);
+    border: 1px solid rgba(201, 184, 255, .55);
+    box-shadow: inset 0 0 0 3px #07061a, 0 6px 20px rgba(27, 24, 48, .25);
+  }
+</style>

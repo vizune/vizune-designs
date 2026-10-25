@@ -1,4 +1,6 @@
 ---
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+
 import Layout from '@/layouts/Layout.astro';
 import BlogPost from '@/components/posts/BlogPost.astro';
 
@@ -45,41 +47,28 @@ const recentPosts = sorted.slice(1, 7);
   title="Welcome to Vizune Designs - News & Updates"
   description="Vizune is a creative hub where anime, gaming, design, and web development merge — explore tutorials, visuals, and resources to fuel your imagination."
   heading="Welcome to Vizune Designs"
+  kicker="Obelisk: Nocturna"
+  intro="A creative hub where anime, gaming, design and web development merge."
 >
-  <section class="space-y-10">
-    <div class="mx-auto max-w-3xl text-center">
-      <p><em>A creative hub where anime, gaming, design, and web development merge.</em></p>
-    </div>
+  {featuredPost ? (
+    <section class="max-w-5xl mx-auto">
+      <h2 class="PanelHeading">Latest news</h2>
+      <BlogPost post={featuredPost} assetsById={assetsById} featured />
+    </section>
+  ) : null}
 
-    <section>
-      <div class="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h2 class="mb-1">News & Updates</h2>
-          <p class="text-white/80">
-            Latest posts from the Vizune blog.
-          </p>
-        </div>
+  <p class="text-center pt-10">
+    <a href="/templates/" class="Btn">Explore the templates <span aria-hidden="true">›</span></a>
+  </p>
 
-        <!-- <a
-          href="/blog/"
-          class="text-white/70 hover:text-lavender transition"
-        >
-          View all posts →
-        </a>
-        -->
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-9">
-        {featuredPost ? (
-          <div class="md:col-span-2">
-            <BlogPost post={featuredPost} assetsById={assetsById} featured />
-          </div>
-        ) : null}
-
+  {recentPosts.length ? (
+    <section class="Section" slot="after">
+      <SectionHeading title="News & updates" subtitle="Latest posts from the Vizune blog" />
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {recentPosts.map((post) => (
           <BlogPost post={post} assetsById={assetsById} />
         ))}
       </div>
     </section>
-  </section>
+  ) : null}
 </Layout>

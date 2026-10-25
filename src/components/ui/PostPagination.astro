@@ -1,0 +1,142 @@
+---
+// Previous / next post navigation with the divider ornament in the middle.
+// Usage: <PostPagination prev={{ title, url }} next={{ title, url }} />
+// Leave out `prev` on the first post or `next` on the latest one.
+const { prev, next, prevLabel = 'Previous post', nextLabel = 'Next post' } = Astro.props;
+---
+
+<nav class="Pager" aria-label="More posts">
+  {prev ? (
+    <a href={prev.url} class="Pager-link Pager-link--prev" rel="prev">
+      <svg class="Pager-chevron" viewBox="0 0 10 16" aria-hidden="true"><path d="M8 2 2 8l6 6" /></svg>
+      <span class="Pager-text">
+        <span class="Pager-label">{prevLabel}</span>
+        <span class="Pager-title">{prev.title}</span>
+      </span>
+    </a>
+  ) : <span class="Pager-spacer"></span>}
+
+  <span class="Pager-ornament" aria-hidden="true"></span>
+
+  {next ? (
+    <a href={next.url} class="Pager-link Pager-link--next" rel="next">
+      <span class="Pager-text">
+        <span class="Pager-label">{nextLabel}</span>
+        <span class="Pager-title">{next.title}</span>
+      </span>
+      <svg class="Pager-chevron" viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6" /></svg>
+    </a>
+  ) : <span class="Pager-spacer"></span>}
+</nav>
+
+<style>
+.Pager {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 1.5rem;
+    max-width: 40rem;
+    margin: 3rem auto 0;
+    padding: 1.25rem 0;
+    border-top: 1px solid rgba(75, 58, 168, .2);
+    border-bottom: 1px solid rgba(75, 58, 168, .2);
+}
+
+.Pager-link {
+    display: flex;
+    align-items: center;
+    gap: .9rem;
+    min-width: 0;
+    color: var(--ink) !important;
+    text-decoration: none !important;
+}
+
+.Pager-link--next {
+    justify-content: flex-end;
+    text-align: right;
+}
+
+.Pager-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.Pager-label {
+    font-family: var(--font-body);
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--purple);
+}
+
+.Pager-title {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 600;
+    line-height: 1.25;
+    transition: color .25s ease;
+}
+
+.Pager-chevron {
+    flex-shrink: 0;
+    width: .65rem;
+    height: 1rem;
+    fill: none;
+    stroke: var(--violet);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform .25s ease;
+}
+
+.Pager-link:hover .Pager-title,
+.Pager-link:focus-visible .Pager-title {
+    color: var(--purple);
+}
+
+.Pager-link--prev:hover .Pager-chevron { transform: translateX(-4px); }
+.Pager-link--next:hover .Pager-chevron { transform: translateX(4px); }
+
+/* The traced ornament, used as a mask so its colour comes from CSS */
+.Pager-ornament {
+    width: 3.75rem;
+    aspect-ratio: 436 / 210;
+    background: var(--midnight);
+    -webkit-mask: url('/divider-ornament.svg') center / contain no-repeat;
+    mask: url('/divider-ornament.svg') center / contain no-repeat;
+}
+
+@media (max-width: 640px) {
+    .Pager {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .Pager-ornament {
+        grid-column: 1 / -1;
+        grid-row: 1;
+        justify-self: center;
+    }
+
+    .Pager-link {
+        align-items: flex-start;
+        gap: .5rem;
+    }
+
+    .Pager-chevron {
+        margin-top: 1.2rem;
+    }
+
+    .Pager-label {
+        font-size: .6rem;
+        letter-spacing: .14em;
+        white-space: nowrap;
+    }
+
+    .Pager-title {
+        font-size: 1.05rem;
+    }
+}
+</style>

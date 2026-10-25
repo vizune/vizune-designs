@@ -79,33 +79,32 @@ function formatUkDate(iso?: string) {
 
 const publishDateUk = formatUkDate(publishDate);
 ---
+
 <article
-  class="render-card bg-white/5 border border-white/10 rounded-2xl overflow-hidden
-         backdrop-blur-md shadow-lg hover:border-white/20 transition"
+  class="render-card Card Card--hover p-3"
   data-tags={filterableTags.join(' ')}
 >
-  {imgUrl ? (
-    <div class="bg-black/20">
+  <div class="Card-media bg-[radial-gradient(ellipse_at_50%_100%,rgba(123,92,255,.3),transparent_70%)]">
+    {imgUrl ? (
       <img
         src={imgUrl}
         alt={alt}
         loading="lazy"
         decoding="async"
-        class="w-full h-full"
+        class="!h-auto"
       />
-    </div>
-  ) : (
-    <div class="aspect-[16/10] bg-black/20 flex items-center justify-center text-white/50 text-sm">
-      No thumbnail
-    </div>
-  )}
+    ) : (
+      <div class="aspect-[16/10] flex items-center justify-center text-sm text-lavender/60">
+        No thumbnail
+      </div>
+    )}
+  </div>
 
-  <div class="p-4">
-    <h3 class="text-white text-xl font-bold leading-snug text-center mb-6">
+  <div class="flex flex-col flex-1 px-4 pt-5 pb-3">
+    <h3 class="Card-title text-center text-[1.45rem]">
       {prefix ? (
         <>
-          <span>{prefix}</span>
-          <br />
+          <span class="Kicker justify-center mb-1">{prefix.replace(/:\s*$/, '')}</span>
           <span>{rest}</span>
         </>
       ) : (
@@ -113,19 +112,11 @@ const publishDateUk = formatUkDate(publishDate);
       )}
     </h3>
 
-    <div class="text-white/90 space-y-1 border-t-1 pt-5">
-      {publishDateUk ? (
-        <p><span class="font-semibold">📅 Publish Date:</span> {publishDateUk}</p>
-      ) : null}
-
-      {dimensions ? (
-        <p><span class="font-semibold">📐 Dimensions:</span> {dimensions}</p>
-      ) : null}
-
-      {fileSize ? (
-        <p><span class="font-semibold">💾 File Size:</span> {fileSize}</p>
-      ) : null}
-    </div>
+    <dl class="Card-meta mt-4 pt-4 border-t border-lavender/20 flex-1">
+      {publishDateUk ? (<><dt>Published</dt><dd>{publishDateUk}</dd></>) : null}
+      {dimensions ? (<><dt>Dimensions</dt><dd>{dimensions}</dd></>) : null}
+      {fileSize ? (<><dt>File size</dt><dd>{fileSize}</dd></>) : null}
+    </dl>
 
     <a
       href={downloadUrl}
@@ -133,9 +124,7 @@ const publishDateUk = formatUkDate(publishDate);
       rel="noopener noreferrer"
       data-render-download
       data-render-title={title}
-      class="Button mt-4 text-lg uppercase inline-flex w-full items-center justify-center gap-2
-            h-10 rounded-xl px-4 bg-white/10 text-white/90 border border-white/10
-            hover:bg-white/15 hover:border-white/20 transition"
+      class="Btn Btn--small mt-5 w-full"
     >
       Download
       <Icon name="newTab" title="Opens url in a new tab" size="small" />

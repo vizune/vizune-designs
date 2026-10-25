@@ -27,25 +27,62 @@ const wrapperClasses = `
   data-post-id={id}
   data-tags={tags}
 >
-  <div class={`wrapper-item ${wrapperClasses}`}>
+  <div class:list={[
+    'wrapper-item Avatar',
+    isCompact ? 'flex items-center' : 'flex flex-col',
+  ]}>
     {img ? (
-        <img
+      <img
         src={img.url}
         alt={img.alt}
         loading="lazy"
         decoding="async"
-        class={`block shrink-0 w-[${section}px] h-[${section}px] object-cover`}
+        class="Avatar-img block shrink-0 object-cover"
+        style={`width: ${section}px; height: ${section}px;`}
         width={img.width}
         height={img.height}
-        />
+      />
     ) : (
-        <div class="aspect-square grid place-items-center text-white/50 text-sm">
-          No image
-        </div>
+      <div class="Avatar-img aspect-square grid place-items-center text-lavender/60 text-sm" style={`width: ${section}px;`}>
+        No image
+      </div>
     )}
 
-    <div class="p-3">
-        <div class={`text-white/80 ${isXL ? ' text-center' : 'text-sm'}`}><strong>{index}:</strong> {category}</div>
+    <div class:list={['Avatar-label px-3 py-2', { 'text-center': !isCompact }]}>
+      <strong>{index}</strong>{category ? <span class="text-lavender/80"> · {category}</span> : null}
     </div>
   </div>
 </article>
+
+<style>
+.Avatar {
+  padding: 4px;
+  color: #ddd6f7;
+  background: linear-gradient(180deg, rgba(24, 18, 58, .96), rgba(8, 6, 24, .98));
+  border: 1px solid rgba(201, 184, 255, .3);
+  box-shadow: 0 6px 18px rgba(27, 24, 48, .2);
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+
+.Avatar:hover {
+  transform: translateY(-3px);
+  border-color: rgba(201, 184, 255, .7);
+  box-shadow: 0 0 24px rgba(167, 139, 255, .45);
+}
+
+.Avatar-img {
+  border: 1px solid rgba(201, 184, 255, .2);
+}
+
+.Avatar-label {
+  font-size: .8rem;
+  line-height: 1.4;
+}
+
+.Avatar-label strong {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+}
+</style>
