@@ -65,8 +65,6 @@ const {
 
 const title = entry.fields.title ?? 'Blog post';
 const description = entry.fields.description ?? title;
-const entryID = entry.sys.id;
-const pageUrl = Astro.url.href;
 ---
 
 <Layout
@@ -78,34 +76,4 @@ const pageUrl = Astro.url.href;
   date={entry.fields.publishDate}
 >
   <BlogArticle entry={entry} assetsById={assetsById} prev={prev} next={next} />
-
-  <section class="Comments">
-    <h2 class="PanelHeading">Comments</h2>
-    <div id="disqus_thread"></div>
-    <noscript>
-      Please enable JavaScript to view the comments powered by Disqus.
-    </noscript>
-  </section>
-
-  <script is:inline define:vars={{ pageUrl, entryID }}>
-    window.disqus_config = function () {
-      this.page.url = pageUrl;
-      this.page.identifier = entryID;
-    };
-
-    (() => {
-      const d = document;
-      const s = d.createElement('script');
-      s.src = 'https://vizune.disqus.com/embed.js';
-      s.setAttribute('data-timestamp', String(+new Date()));
-      (d.head || d.body).appendChild(s);
-    })();
-  </script>
 </Layout>
-
-<style>
-  .Comments {
-    max-width: 40rem;
-    margin: 4rem auto 0;
-  }
-</style>

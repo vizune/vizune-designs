@@ -46,8 +46,7 @@ const prev = previous
   {latest ? (
     <BlogArticle entry={latest} assetsById={assetsById} prev={prev}>
       <p class="text-center pt-6">
-        <a href={`/blog/${latest.fields.slug}/#disqus_thread`} class="Btn Btn--small">Leave a comment <span aria-hidden="true">›</span></a>
-        <a href="/blog/" class="Btn Btn--small ml-3">All posts <span aria-hidden="true">›</span></a>
+        <a href="/blog/" class="Btn Btn--small">All posts <span aria-hidden="true">›</span></a>
       </p>
     </BlogArticle>
   ) : (
