@@ -5,10 +5,18 @@ import { fetchContentfulEntries } from '@/lib/contentful';
 
 // ---------- Settings ----------
 
-// Flip `open` to false to close requests. `note` shows under the status.
+// ✦ Requests status: set to 'open' or 'closed' ✦
+const STATUS: 'open' | 'closed' = 'closed';
+
+// The line shown under the status badge for each state
+const STATUS_NOTES = {
+  open: 'I can take on one new project at a time.',
+  closed: "I'm busy with other projects right now. Please check back soon!",
+};
+
 const status = {
-  open: true,
-  note: 'I can take on one new project at a time.',
+  open: STATUS === 'open',
+  note: STATUS_NOTES[STATUS],
 };
 
 // Where the application form sends submissions. FormSubmit emails each one to
