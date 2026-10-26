@@ -43,7 +43,10 @@ const socials = [
     <li><a href="https://vizune.net/" target="_blank" rel="noopener">Network</a></li>
   </ul>
 
-  <p class="Social-copy">&copy; Vizune &middot; Obelisk: Nocturna</p>
+  <p class="Social-copy">&copy; {new Date().getFullYear()} Vizune Designs &middot; All rights reserved</p>
+  <p class="Social-credit">
+    Characters and artwork belong to their respective owners &middot; Theme: Obelisk: Nocturna
+  </p>
 </div>
 
 <style>
@@ -175,6 +178,15 @@ const socials = [
     font-size: .7rem;
     letter-spacing: .15em;
     color: var(--lavender-dim);
+}
+
+.Social-credit {
+    max-width: 34rem;
+    margin: .4rem auto 0;
+    font-size: .65rem;
+    line-height: 1.6;
+    letter-spacing: .08em;
+    color: rgba(156, 144, 201, .7);
 }
 
 /* Leave room for the floating chat button on phones */
