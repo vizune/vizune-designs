@@ -46,70 +46,61 @@ const sorted = [...items].sort(
 <Layout
   title="Vizune Designs - Templates"
   heading="Vizune Templates"
-  kicker="Resources"
+  kicker="Designs"
   intro="Free website templates. Explore the spread and select a card to reveal its details."
   description="Free website templates from Vizune Designs."
 >
-  <section class="relative pb-10" data-tarot-root>
-    <div class="mx-auto max-w-6xl px-4">
-      <div class="relative min-h-[560px] flex flex-col items-center justify-center gap-2">
-        <div
-          class="tarot-spread relative w-full max-w-5xl h-[420px] sm:h-[460px] md:h-[520px]"
-          data-spread
-        >
-          {sorted.map((post, idx) => (
-            <TemplateTarotCard post={post} assetsById={assetsById} index={idx} />
-          ))}
-        </div>
-
-        <div class="flex items-center gap-8 mb-8">
-          <button
-            type="button"
-            aria-label="Previous templates"
-            data-prev
-            class="Btn h-16 w-16 !p-0 rounded-full"
-          >
-            <img
-              src={arrowPng.src}
-              alt=""
-              aria-hidden="true"
-              class="w-[36px] h-[24px] rotate-180"
-            />
-          </button>
-
-          <button
-            type="button"
-            aria-label="Next templates"
-            data-next
-            class="Btn h-16 w-16 !p-0 rounded-full"
-          >
-            <img
-              src={arrowPng.src}
-              alt=""
-              aria-hidden="true"
-              class="w-[36px] h-[24px]"
-            />
-          </button>
-        </div>
-      </div>
-
+  <section class="relative pb-4" data-tarot-root>
+    <div class="relative mx-auto max-w-[54rem]">
       <div
-        class="Card mx-auto max-w-5xl p-3"
-        data-template-details
+        class="tarot-spread relative w-full h-[400px] sm:h-[440px] md:h-[500px]"
+        data-spread
       >
-        <div class="grid md:grid-cols-[1fr_360px]">
-          <div class="Card-meta p-5 md:p-6 space-y-1" data-template-meta></div>
-
-          <div
-            class="border-t md:border-t-0 md:border-l border-lavender/20 grid content-center gap-px bg-lavender/15"
-            data-template-links
-          ></div>
-        </div>
+        {sorted.map((post, idx) => (
+          <TemplateTarotCard post={post} assetsById={assetsById} index={idx} />
+        ))}
       </div>
+
+      <button
+        type="button"
+        aria-label="Previous template"
+        data-prev
+        class="Spread-arrow Spread-arrow--prev Btn h-11 w-11 sm:h-14 sm:w-14 md:h-16 md:w-16 !p-0 rounded-full"
+      >
+        <img
+          src={arrowPng.src}
+          alt=""
+          aria-hidden="true"
+          class="w-[32px] h-[21px] rotate-180"
+        />
+      </button>
+
+      <button
+        type="button"
+        aria-label="Next template"
+        data-next
+        class="Spread-arrow Spread-arrow--next Btn h-11 w-11 sm:h-14 sm:w-14 md:h-16 md:w-16 !p-0 rounded-full"
+      >
+        <img
+          src={arrowPng.src}
+          alt=""
+          aria-hidden="true"
+          class="w-[32px] h-[21px]"
+        />
+      </button>
+    </div>
+
+    <!-- The "reading" for the centre card -->
+    <div class="Reading" data-template-details aria-live="polite">
+      <span class="Reading-ornament" aria-hidden="true"></span>
+      <p class="Reading-kicker" data-template-kicker></p>
+      <h2 class="Reading-title" data-template-title></h2>
+      <dl class="Reading-meta" data-template-meta></dl>
+      <div class="Reading-links" data-template-links></div>
     </div>
 
     <template data-new-tab-icon>
-      <Icon name="newTab" title="Opens url in a new tab" />
+      <Icon name="newTab" title="Opens url in a new tab" size="small" />
     </template>
 
     <script is:inline>
@@ -120,6 +111,9 @@ const sorted = [...items].sort(
         const cards = Array.from(root.querySelectorAll('[data-card]'));
         const prevBtn = root.querySelector('[data-prev]');
         const nextBtn = root.querySelector('[data-next]');
+        const details = root.querySelector('[data-template-details]');
+        const kicker = root.querySelector('[data-template-kicker]');
+        const title = root.querySelector('[data-template-title]');
         const meta = document.querySelector('[data-template-meta]');
         const links = document.querySelector('[data-template-links]');
         const newTabIcon = root.querySelector('[data-new-tab-icon]')?.innerHTML ?? '';
@@ -137,7 +131,7 @@ const sorted = [...items].sort(
         }
 
         function renderDetails(card) {
-          if (!meta || !links || !card) return;
+          if (!details || !meta || !links || !card) return;
 
           const publishDate = card.dataset.publishDate || '';
           const techStack = card.dataset.techStack || '';
@@ -148,14 +142,24 @@ const sorted = [...items].sort(
           const repoUrl = card.dataset.repoUrl || '';
           const downloadUrl = card.dataset.downloadUrl || '';
 
-          meta.innerHTML = `
-            <h2 class="Card-title mb-3">${card.dataset.title || ''}</h2>
-            ${publishDate ? `<p><span class="Kicker inline-flex">Published</span> ${formatUkDate(publishDate)}</p>` : ''}
-            ${techStack ? `<p><span class="Kicker inline-flex">Tech stack</span> ${techStack}</p>` : ''}
-            ${category ? `<p><span class="Kicker inline-flex">Category</span> ${category}</p>` : ''}
-            ${series ? `<p><span class="Kicker inline-flex">Series</span> ${series}</p>` : ''}
-            ${character ? `<p><span class="Kicker inline-flex">Character</span> ${character}</p>` : ''}
-          `;
+          // Split "14: The Dusken Glow" into the card number and its name
+          const fullTitle = card.dataset.title || '';
+          const match = fullTitle.match(/^(\d+):\s*(.*)$/);
+
+          if (kicker) kicker.textContent = match ? `Template ${match[1]}` : 'Template';
+          if (title) title.textContent = match ? match[2] : fullTitle;
+
+          const facts = [
+            ['Published', formatUkDate(publishDate)],
+            ['Tech stack', techStack],
+            ['Category', category],
+            ['Series', series],
+            ['Character', character],
+          ].filter(([, value]) => value);
+
+          meta.innerHTML = facts.map(([label, value]) => `
+            <div class="Reading-fact"><dt>${label}</dt><dd>${value}</dd></div>
+          `).join('');
 
           const items = [
             demoUrl ? { label: 'Demo', href: demoUrl, action: 'demo' } : null,
@@ -169,14 +173,10 @@ const sorted = [...items].sort(
               target="_blank"
               rel="noopener noreferrer"
               data-template-action="${item.action}"
-              class="flex items-center justify-between gap-4
-                    bg-[#0c0a22] px-5 py-5 font-display text-lg tracking-[.14em] uppercase text-[#ddd6f7]
-                    hover:bg-[#1d1840] hover:text-white transition"
+              class="Btn Btn--small"
             >
               <span>${item.label}</span>
-              <span aria-hidden="true" class="text-lavender [&_svg]:h-4 [&_svg]:w-4">
-                ${newTabIcon}
-              </span>
+              ${newTabIcon}
             </a>
           `).join('');
 
@@ -194,6 +194,29 @@ const sorted = [...items].sort(
               }
             });
           });
+        }
+
+        // Fade the reading out, swap in the new card's details, then fade back in
+        let shownCard = null;
+        let fadeTimer = 0;
+
+        function showDetails(card) {
+          if (!card || card === shownCard) return;
+
+          const first = shownCard === null;
+          shownCard = card;
+
+          if (first) {
+            renderDetails(card);
+            return;
+          }
+
+          details?.classList.add('is-fading');
+          window.clearTimeout(fadeTimer);
+          fadeTimer = window.setTimeout(() => {
+            renderDetails(shownCard);
+            details?.classList.remove('is-fading');
+          }, 200);
         }
 
         function render() {
@@ -219,7 +242,7 @@ const sorted = [...items].sort(
           });
 
           const centerCard = cards[activeIndex] ?? null;
-          renderDetails(centerCard);
+          showDetails(centerCard);
 
           if (prevBtn) prevBtn.disabled = isAnimating || activeIndex === 0;
           if (nextBtn) nextBtn.disabled = isAnimating || activeIndex === cards.length - 1;
@@ -263,3 +286,125 @@ const sorted = [...items].sort(
     </script>
   </section>
 </Layout>
+
+<style>
+  /* Arrows sit either side of the spread, level with the cards */
+  .Spread-arrow {
+    position: absolute;
+    top: 50%;
+    z-index: 5;
+    transform: translateY(-50%);
+  }
+
+  .Spread-arrow:hover:not(:disabled) {
+    transform: translateY(calc(-50% - 2px));
+  }
+
+  .Spread-arrow--prev { left: 0; }
+  .Spread-arrow--next { right: 0; }
+
+  /* The centre card's details, read like a caption beneath it */
+  .Reading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 44rem;
+    margin: 0 auto;
+    text-align: center;
+    transition: opacity .2s ease, transform .2s ease;
+  }
+
+  .Reading.is-fading {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  .Reading-ornament {
+    width: 3.75rem;
+    aspect-ratio: 436 / 210;
+    margin-bottom: 1rem;
+    background: var(--midnight);
+    -webkit-mask: url('/divider-ornament.svg') center / contain no-repeat;
+    mask: url('/divider-ornament.svg') center / contain no-repeat;
+  }
+
+  .Reading-kicker {
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--carmine);
+  }
+
+  .Reading-title {
+    margin-top: .35rem;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.9rem, 4vw, 2.6rem);
+    line-height: 1.1;
+    color: #1f1a4d;
+    text-wrap: balance;
+  }
+
+  /* Facts on one line, separated by sparkles */
+  .Reading-meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: .6rem 0;
+    margin-top: 1.25rem;
+    padding: .9rem 0;
+    border-top: 1px solid rgba(75, 58, 168, .2);
+    border-bottom: 1px solid rgba(75, 58, 168, .2);
+  }
+
+  .Reading-meta :global(.Reading-fact) {
+    display: flex;
+    flex-direction: column;
+    padding: 0 1.1rem;
+  }
+
+  .Reading-meta :global(.Reading-fact + .Reading-fact) {
+    position: relative;
+  }
+
+  .Reading-meta :global(.Reading-fact + .Reading-fact)::before {
+    content: '\2726';
+    position: absolute;
+    left: -.3rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: .55rem;
+    color: var(--violet);
+  }
+
+  .Reading-meta :global(dt) {
+    font-size: .62rem;
+    font-weight: 700;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--purple);
+  }
+
+  .Reading-meta :global(dd) {
+    margin: .15rem 0 0;
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .Reading-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: .75rem;
+    margin-top: 1.5rem;
+  }
+
+  .Reading-links :global(svg) {
+    width: .85rem;
+    height: .85rem;
+    color: var(--lavender);
+  }
+</style>
