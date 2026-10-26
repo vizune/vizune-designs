@@ -72,7 +72,7 @@ const sorted = [...items].sort(
           const end = start + pageSize;
 
           cards.forEach((card, index) => {
-            card.classList.toggle('hidden', !(index >= start && index < end));
+            card.hidden = !(index >= start && index < end);
           });
 
           pagination?.dispatchEvent(
