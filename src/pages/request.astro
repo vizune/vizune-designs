@@ -1,7 +1,69 @@
 ---
 import Layout from '@/layouts/Layout.astro';
----
+import Sparkle from '@/components/ornament/Sparkle.astro';
 
+// ---------- Settings ----------
+
+// Flip `open` to false to close requests. `note` shows under the status.
+const status = {
+  open: true,
+  note: 'I can take on one new project at a time.',
+};
+
+// Where the application form sends submissions (e.g. a Formspree form URL).
+// Leave empty until it's set up: the form shows but can't be sent.
+const FORM_ACTION = '';
+
+// Custom templates I've made for people. The section hides while this is empty.
+// image: a URL or an imported asset's `.src`; url: the live site (optional).
+const examples: { name: string; client: string; platform: string; url?: string; image?: string }[] = [];
+
+// ---------- Guidelines ----------
+
+const guidelines = [
+  {
+    title: 'Before you apply',
+    rules: [
+      ['Please only apply if you genuinely intend to use the template.', "This service is intended for people who have hit a genuine design or technical barrier and would benefit from help getting their site off the ground. Please don't apply simply to collect layouts, experiment with several alternatives, or if you regularly replace themes shortly after receiving them. Custom templates can take many hours to design, build, test and refine, and I want that time to go towards somebody who will meaningfully benefit from it."],
+      ['One designer/developer at a time.', "Please don't request the same custom project from multiple designers or developers simultaneously without being completely upfront with everyone involved and receiving their acknowledgement. Having several people unknowingly donate their time towards competing versions of the same request isn't fair to them. Applying for alternative versions elsewhere while I am actively working on yours may result in the project being cancelled."],
+      ['A request is not automatically an accepted project.', "Sending me an idea or application does not mean I have agreed to make it. I may decline a request, reduce its scope, suggest an alternative approach, or decide that I don't currently have the capacity to take it on."],
+      ['Please provide a clear brief before work begins.', "Tell me what you need, what kind of site you are building, any required functionality, your visual preferences and any relevant examples. I'm happy to help develop an idea, but major changes in direction after substantial work has already been completed may be declined."],
+      ["Please confirm that you've read these guidelines.", 'To show that you\'ve read and understood the rules before requesting a template, enter the word “starlight” in the guidelines box on the application form. Requests that omit it may not receive a response.'],
+    ],
+  },
+  {
+    title: 'While I work on it',
+    rules: [
+      ['Free projects do not have guaranteed deadlines.', "These templates are created in my spare time around my job, personal projects and other commitments. Unless we have explicitly agreed otherwise, there is no completion date. Please don't repeatedly ask when the project will be finished or pressure me to work faster."],
+      ['The agreed scope matters.', 'Small refinements and reasonable amendments to the template I created are absolutely fine. Completely changing the concept, requesting substantial new functionality, or effectively asking for a redesign is a new project and is not automatically included.'],
+      ['Please communicate clearly and respectfully.', "If something isn't working or you'd like something adjusted, explain specifically what you mean and include screenshots or examples where useful. Vague requests can unintentionally become much larger pieces of work."],
+      ['Please respect my time.', 'I offer this because I enjoy contributing to the community, not because I am providing an unpaid commercial service. Repeated chasing, unreasonable demands, entitlement or disrespect may result in me ending support or withdrawing from the project.'],
+      ['I reserve the right to step away from a project.', 'If the scope changes significantly, communication becomes uncomfortable, the project no longer fits the purpose of this service, or I simply no longer have the capacity to continue, I may end the project. Any completed work already provided can continue to be used under the original terms.'],
+    ],
+  },
+  {
+    title: 'After handover',
+    rules: [
+      ['Bug fixes and feature requests are different things.', "If something I built genuinely isn't functioning as intended, please tell me and I'll investigate when I can. Asking for new functionality, additional layouts or integrations is a feature request and may be declined."],
+      ['Free support is not unlimited ongoing development.', "I'm happy to explain how something works, help resolve genuine problems and point you in the right direction when you hit a knowledge gap. A free template does not include indefinite maintenance, repeated customisation or permanent access to me as your developer."],
+      ["I don't repair or maintain other developers' work.", 'I may help you understand a problem or offer advice, but debugging, completing, restructuring or repackaging a theme made by somebody else is a separate piece of development work and something I choose not to take on.'],
+      ['I want you to be able to maintain your own site.', "Where possible, I'll build things so that normal content can be managed through the platform or CMS rather than requiring you to edit source code whenever you want to update your site. I'm also happy to explain parts of the implementation so that you can learn rather than remaining dependent on me."],
+      ['Please keep backups of your site.', "Before installing or modifying a theme, keep a current backup of your content and existing site. I can't be responsible for problems caused later by hosting changes, incompatible plugins, third-party modifications or edits made after handover."],
+    ],
+  },
+  {
+    title: 'Credit & ownership',
+    rules: [
+      ['Credit must remain unless otherwise agreed.', "Please don't remove my design/development credit or present the template as your own work without discussing it with me first."],
+      ['Custom work may not be sold or redistributed as your own.', 'A template created specifically for you must not be resold, repackaged, uploaded as your own resource or redistributed to other people without permission.'],
+      ['Retired free templates may be repurposed for the community.', 'If you stop using the free custom template, replace it with another design or otherwise retire it, you agree that I may adapt, rework and release the underlying template design/code as free community content. Personal information, private content, branding specific to you and third-party assets that I do not have redistribution rights for will be removed or replaced first.'],
+      ['Third-party creators must be respected too.', "Any artwork, fonts, photographs, code, plugins or other assets supplied for the project must be licensed appropriately. I won't knowingly use stolen artwork, improperly redistributed assets or content we don't have permission to use."],
+    ],
+  },
+];
+
+const ruleCount = guidelines.reduce((n, g) => n + g.rules.length, 0);
+---
 
 <Layout
   title="Vizune Designs - Request"
@@ -10,31 +72,367 @@ import Layout from '@/layouts/Layout.astro';
   intro="Free custom templates for the indie web community. Please read the guidelines before you apply."
   description="Guidelines for requesting a free custom template from Vizune Designs."
 >
-  <div class="Prose">
-  <p>
-    I offer free custom templates because I want to help people in the indie web community overcome design and technical barriers that might otherwise stop them creating. These projects take a significant amount of time, so the following guidelines help make sure that time goes to people who genuinely need and value the help.
-  </p>
-
-  <ul>
-    <li><strong>Please only apply if you genuinely intend to use the template.</strong> This service is intended for people who have hit a genuine design or technical barrier and would benefit from help getting their site off the ground. Please don't apply simply to collect layouts, experiment with several alternatives, or if you regularly replace themes shortly after receiving them. Custom templates can take many hours to design, build, test and refine, and I want that time to go towards somebody who will meaningfully benefit from it.</li>
-    <li><strong>One designer/developer at a time.</strong> Please don't request the same custom project from multiple designers or developers simultaneously without being completely upfront with everyone involved and receiving their acknowledgement. Having several people unknowingly donate their time towards competing versions of the same request isn't fair to them. Applying for alternative versions elsewhere while I am actively working on yours may result in the project being cancelled.</li>
-    <li><strong>A request is not automatically an accepted project.</strong> Sending me an idea or application does not mean I have agreed to make it. I may decline a request, reduce its scope, suggest an alternative approach, or decide that I don't currently have the capacity to take it on.</li>
-    <li><strong>Free projects do not have guaranteed deadlines.</strong> These templates are created in my spare time around my job, personal projects and other commitments. Unless we have explicitly agreed otherwise, there is no completion date. Please don't repeatedly ask when the project will be finished or pressure me to work faster.</li>
-    <li><strong>Please provide a clear brief before work begins.</strong> Tell me what you need, what kind of site you are building, any required functionality, your visual preferences and any relevant examples. I'm happy to help develop an idea, but major changes in direction after substantial work has already been completed may be declined.</li>
-    <li><strong>The agreed scope matters.</strong> Small refinements and reasonable amendments to the template I created are absolutely fine. Completely changing the concept, requesting substantial new functionality, or effectively asking for a redesign is a new project and is not automatically included.</li>
-    <li><strong>Bug fixes and feature requests are different things.</strong> If something I built genuinely isn't functioning as intended, please tell me and I'll investigate when I can. Asking for new functionality, additional layouts or integrations is a feature request and may be declined.</li>
-    <li><strong>Free support is not unlimited ongoing development.</strong> I'm happy to explain how something works, help resolve genuine problems and point you in the right direction when you hit a knowledge gap. A free template does not include indefinite maintenance, repeated customisation or permanent access to me as your developer.</li>
-    <li><strong>I don't repair or maintain other developers' work.</strong> I may help you understand a problem or offer advice, but debugging, completing, restructuring or repackaging a theme made by somebody else is a separate piece of development work and something I choose not to take on.</li>
-    <li><strong>I want you to be able to maintain your own site.</strong> Where possible, I'll build things so that normal content can be managed through the platform or CMS rather than requiring you to edit source code whenever you want to update your site. I'm also happy to explain parts of the implementation so that you can learn rather than remaining dependent on me.</li>
-    <li><strong>Please communicate clearly and respectfully.</strong> If something isn't working or you'd like something adjusted, explain specifically what you mean and include screenshots or examples where useful. Vague requests can unintentionally become much larger pieces of work.</li>
-    <li><strong>Please respect my time.</strong> I offer this because I enjoy contributing to the community, not because I am providing an unpaid commercial service. Repeated chasing, unreasonable demands, entitlement or disrespect may result in me ending support or withdrawing from the project.</li>
-    <li><strong>Credit must remain unless otherwise agreed.</strong> Please don't remove my design/development credit or present the template as your own work without discussing it with me first.</li>
-    <li><strong>Custom work may not be sold or redistributed as your own.</strong> A template created specifically for you must not be resold, repackaged, uploaded as your own resource or redistributed to other people without permission.</li>
-    <li><strong>Retired free templates may be repurposed for the community.</strong> If you stop using the free custom template, replace it with another design or otherwise retire it, you agree that I may adapt, rework and release the underlying template design/code as free community content. Personal information, private content, branding specific to you and third-party assets that I do not have redistribution rights for will be removed or replaced first.</li>
-    <li><strong>Third-party creators must be respected too.</strong> Any artwork, fonts, photographs, code, plugins or other assets supplied for the project must be licensed appropriately. I won't knowingly use stolen artwork, improperly redistributed assets or content we don't have permission to use.</li>
-    <li><strong>Please keep backups of your site.</strong> Before installing or modifying a theme, keep a current backup of your content and existing site. I can't be responsible for problems caused later by hosting changes, incompatible plugins, third-party modifications or edits made after handover.</li>
-    <li><strong>Please confirm that you've read these guidelines.</strong> To show that you've read and understood the rules before requesting a template, begin your application/message with the word “starlight”. Requests that omit it may not receive a response.</li>
-    <li><strong>I reserve the right to step away from a project.</strong> If the scope changes significantly, communication becomes uncomfortable, the project no longer fits the purpose of this service, or I simply no longer have the capacity to continue, I may end the project. Any completed work already provided can continue to be used under the original terms.</li>
-  </ul>
+  <!-- Status -->
+  <div class:list={['Status', status.open ? 'Status--open' : 'Status--closed']}>
+    <span class="Status-dot" aria-hidden="true"></span>
+    <p class="Status-label">Requests are <strong>{status.open ? 'open' : 'closed'}</strong></p>
+    {status.note && <p class="Status-note">{status.note}</p>}
   </div>
+
+  <div class="Prose">
+    <p>
+      I offer free custom templates because I want to help people in the indie web community overcome design and technical barriers that might otherwise stop them creating. These projects take a significant amount of time, so the following guidelines help make sure that time goes to people who genuinely need and value the help.
+    </p>
+  </div>
+
+  <!-- Examples -->
+  {examples.length > 0 && (
+    <section class="mt-14">
+      <h2 class="PanelHeading">Templates I've made</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        {examples.map((example) => {
+          const Tag = example.url ? 'a' : 'div';
+          return (
+            <Tag
+              href={example.url}
+              target={example.url ? '_blank' : undefined}
+              rel={example.url ? 'noopener noreferrer' : undefined}
+              class:list={['Card p-3', { 'Card--hover': example.url }]}
+            >
+              <div class="Card-media aspect-[16/10]">
+                {example.image && <img src={example.image} alt={`${example.name} template`} loading="lazy" decoding="async" />}
+              </div>
+              <div class="px-3 pt-4 pb-2">
+                <p class="Kicker">
+                  <Sparkle class="Kicker-star" />
+                  {example.platform}
+                </p>
+                <h3 class="Card-title mt-2 text-[1.4rem]">{example.name}</h3>
+                <p class="Card-text mt-1">Made for {example.client}</p>
+                {example.url && <span class="Card-more mt-3 block">Visit site <span aria-hidden="true">›</span></span>}
+              </div>
+            </Tag>
+          );
+        })}
+      </div>
+    </section>
+  )}
+
+  <!-- Guidelines -->
+  <section class="mt-14">
+    <h2 class="PanelHeading">The guidelines</h2>
+    <p class="PanelIntro">{ruleCount} rules in four parts. Open each one and give it a read before you apply.</p>
+
+    <div class="Rules">
+      {guidelines.map((group, i) => (
+        <details class="Rules-group" open={i === 0}>
+          <summary class="Rules-summary">
+            <span class="Rules-number">{String(i + 1).padStart(2, '0')}</span>
+            <span class="Rules-title">{group.title}</span>
+            <span class="Rules-count">{group.rules.length} rules</span>
+            <Sparkle class="Rules-toggle" />
+          </summary>
+          <div class="Rules-list Prose"><ul>
+            {group.rules.map(([rule, detail]) => (
+              <li><strong>{rule}</strong> {detail}</li>
+            ))}
+          </ul></div>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <!-- Application form -->
+  <section class="mt-14" id="apply">
+    <h2 class="PanelHeading">Apply for a template</h2>
+
+    {status.open ? (
+      <form class="Apply" action={FORM_ACTION || undefined} method="POST">
+        <div class="Apply-row">
+          <label class="Apply-field">
+            <span class="Apply-label">Name</span>
+            <input class="Field !pr-4" type="text" name="name" required autocomplete="name" />
+          </label>
+          <label class="Apply-field">
+            <span class="Apply-label">Email</span>
+            <input class="Field !pr-4" type="email" name="email" required autocomplete="email" />
+          </label>
+        </div>
+
+        <div class="Apply-row">
+          <label class="Apply-field">
+            <span class="Apply-label">Your current site <em>(if you have one)</em></span>
+            <input class="Field !pr-4" type="url" name="website" placeholder="https://" />
+          </label>
+          <label class="Apply-field">
+            <span class="Apply-label">Platform</span>
+            <span class="relative block">
+              <select class="Field" name="platform" required>
+                <option value="">Choose a platform</option>
+                <option>Neocities / static HTML</option>
+                <option>Nekoweb</option>
+                <option>WordPress</option>
+                <option>Tumblr</option>
+                <option>Carrd</option>
+                <option>Other</option>
+              </select>
+              <svg class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-purple" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 111.08 1.04l-4.24 4.38a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+              </svg>
+            </span>
+          </label>
+        </div>
+
+        <label class="Apply-field">
+          <span class="Apply-label">What is your site for?</span>
+          <textarea class="Field Apply-text" name="about" rows="3" required placeholder="A fan site, a personal blog, a portfolio..."></textarea>
+        </label>
+
+        <label class="Apply-field">
+          <span class="Apply-label">What do you need it to do?</span>
+          <textarea class="Field Apply-text" name="features" rows="3" required placeholder="Pages, a blog layout, a gallery, a link list..."></textarea>
+        </label>
+
+        <label class="Apply-field">
+          <span class="Apply-label">Look and feel</span>
+          <textarea class="Field Apply-text" name="style" rows="3" required placeholder="Colours, mood, characters or series, and links to sites or art you love"></textarea>
+        </label>
+
+        <label class="Apply-field">
+          <span class="Apply-label">Artwork and assets</span>
+          <textarea class="Field Apply-text" name="assets" rows="2" placeholder="Any artwork, fonts or images you'd like used, and where they're from"></textarea>
+        </label>
+
+        <div class="Apply-row">
+          <label class="Apply-field">
+            <span class="Apply-label">Guidelines word</span>
+            <input class="Field !pr-4" type="text" name="guidelines_word" required autocomplete="off" />
+            <span class="Apply-hint">You'll find it in the guidelines above.</span>
+          </label>
+          <label class="Apply-check">
+            <input type="checkbox" name="agreed" value="yes" required />
+            <span>I've read the guidelines and I'm not requesting this template from anyone else.</span>
+          </label>
+        </div>
+
+        <p class="text-center pt-2">
+          <button type="submit" class="Btn" disabled={!FORM_ACTION}>Send application <span aria-hidden="true">›</span></button>
+        </p>
+        {!FORM_ACTION && <p class="Apply-hint text-center">The form isn't connected yet.</p>}
+      </form>
+    ) : (
+      <p class="PanelIntro">Requests are closed at the moment. Please check back soon.</p>
+    )}
+  </section>
 </Layout>
+
+<style>
+  /* ---------- Status ---------- */
+
+  .Status {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .2rem;
+    width: fit-content;
+    margin: -1rem auto 2.5rem;
+    padding: .9rem 2.25rem;
+    text-align: center;
+    background: linear-gradient(180deg, #1d1840, #07061a);
+    border: 1px solid rgba(201, 184, 255, .55);
+    box-shadow: inset 0 0 0 3px #07061a, inset 0 0 0 4px rgba(201, 184, 255, .25), 0 10px 26px rgba(27, 24, 48, .3);
+  }
+
+  .Status--open { --status: #7dffc4; }
+  .Status--closed { --status: #ff6fb5; }
+
+  .Status-dot {
+    width: .6rem;
+    height: .6rem;
+    border-radius: 50%;
+    background: var(--status);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, .08), 0 0 12px var(--status);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    50% { box-shadow: 0 0 0 5px rgba(255, 255, 255, .04), 0 0 22px var(--status); }
+  }
+
+  .Status-label {
+    margin-top: .35rem;
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #fff;
+  }
+
+  .Status-label strong {
+    font-weight: 600;
+    color: var(--status);
+    text-shadow: 0 0 12px var(--status);
+  }
+
+  .Status-note {
+    font-size: .8rem;
+    color: #c9c2e6;
+  }
+
+  /* ---------- Guidelines ---------- */
+
+  .Rules {
+    display: grid;
+    gap: .9rem;
+    max-width: 44rem;
+    margin: 0 auto;
+  }
+
+  .Rules-group {
+    background: rgba(255, 255, 255, .55);
+    border: 1px solid rgba(75, 58, 168, .25);
+    transition: border-color .2s ease, box-shadow .2s ease;
+  }
+
+  .Rules-group[open] {
+    border-color: rgba(75, 58, 168, .45);
+    box-shadow: 0 10px 30px rgba(27, 24, 48, .12);
+  }
+
+  .Rules-summary {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .Rules-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .Rules-number {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--violet);
+  }
+
+  .Rules-title {
+    flex: 1;
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--midnight);
+  }
+
+  .Rules-count {
+    font-size: .65rem;
+    font-weight: 700;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: #5b4f99;
+  }
+
+  .Rules-toggle {
+    font-size: .8rem;
+    color: var(--purple);
+    transition: transform .3s ease;
+  }
+
+  .Rules-group[open] .Rules-toggle {
+    transform: rotate(45deg);
+  }
+
+  .Rules-list {
+    margin: 0;
+    padding: .25rem 1.5rem 1.25rem;
+    font-size: .95rem;
+  }
+
+  .Rules-list > ul {
+    max-width: none;
+    margin-bottom: 0;
+  }
+
+  .Rules-list li {
+    margin-bottom: .9rem;
+  }
+
+  /* ---------- Application form ---------- */
+
+  .Apply {
+    display: grid;
+    gap: 1.25rem;
+    max-width: 44rem;
+    margin: 0 auto;
+  }
+
+  .Apply-row {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 640px) {
+    .Apply-row {
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+    }
+  }
+
+  .Apply-field {
+    display: flex;
+    flex-direction: column;
+    gap: .4rem;
+  }
+
+  .Apply-label {
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--purple);
+  }
+
+  .Apply-label em {
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: .05em;
+    text-transform: none;
+    color: #5b4f99;
+  }
+
+  .Apply-text {
+    height: auto;
+    padding: .75rem 1rem;
+    line-height: 1.6;
+    resize: vertical;
+  }
+
+  .Apply-hint {
+    font-size: .8rem;
+    color: #5b4f99;
+  }
+
+  .Apply-check {
+    display: flex;
+    align-items: flex-start;
+    gap: .75rem;
+    padding-top: 1.6rem;
+    font-size: .9rem;
+    line-height: 1.5;
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .Apply-check input {
+    flex-shrink: 0;
+    width: 1.1rem;
+    height: 1.1rem;
+    margin-top: .15rem;
+    accent-color: var(--purple);
+  }
+</style>
