@@ -19,7 +19,7 @@ const sortPostsByIndex = posts => {
 <Layout
   title="Vizune Designs - Avatars"
   heading="Vizune Avatars"
-  kicker="Resources"
+  kicker="Designs"
   intro="Free anime avatars in three sizes. Pick a size, then filter by series or artist."
   description="Free anime avatars in 100 x 100, 200 x 200 and 400 x 400 sizes from Vizune Designs."
 >
@@ -34,7 +34,7 @@ const sortPostsByIndex = posts => {
         title="100 x 100 avatars"
         posts={sortPostsByIndex(posts100)}
         assets={posts100.includes.Asset}
-        itemsPerPage={25}
+        itemsPerPage={20}
       />
     </ui-panel>
     <ui-panel>
@@ -43,7 +43,7 @@ const sortPostsByIndex = posts => {
         title="200 x 200 avatars"
         posts={sortPostsByIndex(posts200)}
         assets={posts200.includes.Asset}
-        itemsPerPage={18}
+        itemsPerPage={15}
       />
     </ui-panel>
     <ui-panel>
