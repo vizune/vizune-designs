@@ -26,6 +26,7 @@ const sorted = items
   .sort((a, b) => toTime(b.fields.publishDate) - toTime(a.fields.publishDate));
 
 const pageSize = 10;
+const hasPagination = sorted.length > pageSize;
 ---
 
 <Layout
@@ -35,14 +36,14 @@ const pageSize = 10;
   kicker="News & updates"
   intro="Every post from the Vizune blog, newest first."
 >
-  <div class="blog-list" data-section="blog">
+  <div class:list={['blog-list', { 'pb-10': !hasPagination }]} data-section="blog">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-5xl mx-auto">
       {sorted.map((post) => (
         <BlogPost post={post} assetsById={assetsById} />
       ))}
     </div>
 
-    <Pagination id="blog" pageSize={pageSize} />
+    {hasPagination && <Pagination id="blog" pageSize={pageSize} />}
 
     <script is:inline define:vars={{ pageSize }}>
       (() => {
