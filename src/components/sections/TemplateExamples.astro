@@ -1,0 +1,344 @@
+---
+import Sparkle from '@/components/ornament/Sparkle.astro';
+
+// Cards for the custom templates I've made, each opening its full-page
+// screenshot in a scrollable "browser window" modal.
+export type TemplateExample = {
+  title: string;
+  date: string;
+  techStack: string;
+  description?: string;
+  thumbnail?: string;
+  screenshot?: { src: string; width?: number; height?: number };
+};
+
+interface Props {
+  examples: TemplateExample[];
+}
+
+const { examples } = Astro.props as Props;
+---
+
+<div class="Examples" data-examples>
+  {examples.map((example) => (
+    <article class="Card Card--hover p-3">
+      <button
+        type="button"
+        class="Examples-thumb Card-media aspect-square"
+        data-preview
+        data-title={example.title}
+        data-tech-stack={example.techStack}
+        data-src={example.screenshot?.src}
+        data-width={example.screenshot?.width}
+        data-height={example.screenshot?.height}
+        disabled={!example.screenshot}
+        aria-label={`Preview ${example.title}`}
+      >
+        {example.thumbnail && <img src={example.thumbnail} alt="" loading="lazy" decoding="async" />}
+      </button>
+
+      <div class="px-3 pt-4 pb-2 flex flex-col flex-1">
+        {example.techStack && (
+          <p class="Kicker">
+            <Sparkle class="Kicker-star" />
+            {example.techStack}
+          </p>
+        )}
+        <h3 class="Card-title mt-2 text-[1.4rem]">{example.title}</h3>
+        {example.date && <p class="Card-text mt-1">{example.date}</p>}
+        {example.description && <p class="Card-text mt-3 line-clamp-4">{example.description}</p>}
+
+        <div class="Examples-actions">
+          {example.screenshot && (
+            <button
+              type="button"
+              class="Btn Btn--small"
+              data-preview
+              data-title={example.title}
+              data-tech-stack={example.techStack}
+              data-src={example.screenshot.src}
+              data-width={example.screenshot.width}
+              data-height={example.screenshot.height}
+            >
+              Preview
+            </button>
+          )}
+        </div>
+      </div>
+    </article>
+  ))}
+</div>
+
+<dialog class="Preview" data-preview-dialog aria-labelledby="preview-title">
+  <div class="Preview-window">
+    <div class="Preview-bar">
+      <span class="Preview-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+      <p class="Preview-address">
+        <Sparkle class="Preview-star" />
+        <span id="preview-title" data-preview-title></span>
+        <span class="Preview-tech" data-preview-tech></span>
+      </p>
+      <button type="button" class="Preview-close" data-preview-close aria-label="Close preview">&times;</button>
+    </div>
+
+    <div class="Preview-viewport" data-preview-viewport tabindex="0">
+      <p class="Preview-loading" aria-hidden="true">Loading preview…</p>
+      <img class="Preview-image" data-preview-image alt="" />
+    </div>
+  </div>
+</dialog>
+
+<script is:inline>
+  (() => {
+    const root = document.querySelector('[data-examples]');
+    const dialog = document.querySelector('[data-preview-dialog]');
+    if (!root || !dialog) return;
+
+    const title = dialog.querySelector('[data-preview-title]');
+    const tech = dialog.querySelector('[data-preview-tech]');
+    const viewport = dialog.querySelector('[data-preview-viewport]');
+    const image = dialog.querySelector('[data-preview-image]');
+
+    root.querySelectorAll('[data-preview]').forEach((trigger) => {
+      trigger.addEventListener('click', () => {
+        const { src, width, height } = trigger.dataset;
+        if (!src) return;
+
+        title.textContent = trigger.dataset.title || '';
+        tech.textContent = trigger.dataset.techStack || '';
+
+        // Reserve the screenshot's height up front so the scrollbar doesn't jump while it loads
+        image.classList.remove('is-loaded');
+        image.removeAttribute('src');
+        if (width && height) {
+          image.width = Number(width);
+          image.height = Number(height);
+        }
+        image.alt = `Full-page screenshot of ${trigger.dataset.title || 'the template'}`;
+        image.src = src;
+
+        dialog.showModal();
+        viewport.scrollTop = 0;
+
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', 'template_click', {
+            template_name: trigger.dataset.title || '',
+            action: 'preview',
+            location: 'request_page',
+          });
+        }
+      });
+    });
+
+    image.addEventListener('load', () => image.classList.add('is-loaded'));
+
+    dialog.querySelector('[data-preview-close]')?.addEventListener('click', () => dialog.close());
+
+    // Clicking the dimmed backdrop (outside the window) closes it too
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+  })();
+</script>
+
+<style>
+  .Examples {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 20rem));
+    justify-content: center;
+    gap: 1.5rem;
+  }
+
+  .Examples-thumb {
+    display: block;
+    width: 100%;
+    padding: 0;
+    cursor: zoom-in;
+  }
+
+  .Examples-thumb:disabled {
+    cursor: default;
+  }
+
+  .Examples-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .6rem;
+    margin-top: auto;
+    padding-top: 1.1rem;
+  }
+
+  /* ---------- Preview modal ---------- */
+
+  .Preview {
+    width: min(72rem, 100% - 2rem);
+    max-width: none;
+    height: min(52rem, 100dvh - 2rem);
+    max-height: none;
+    margin: auto;
+    padding: 0;
+    color: #e9e6f7;
+    background: none;
+    border: 0;
+    overflow: visible;
+  }
+
+  .Preview[open] {
+    animation: preview-in .3s cubic-bezier(.22, 1, .36, 1);
+  }
+
+  @keyframes preview-in {
+    from { opacity: 0; transform: translateY(12px) scale(.98); }
+  }
+
+  .Preview::backdrop {
+    background: rgba(5, 4, 15, .78);
+    backdrop-filter: blur(4px);
+  }
+
+  :global(html:has(.Preview[open])) {
+    overflow: hidden;
+  }
+
+  .Preview-window {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: linear-gradient(180deg, #1d1840, #07061a);
+    border: 1px solid rgba(201, 184, 255, .55);
+    box-shadow: inset 0 0 0 3px #07061a, inset 0 0 0 4px rgba(201, 184, 255, .25), 0 0 60px rgba(123, 92, 255, .35);
+    padding: 6px;
+  }
+
+  .Preview-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: .55rem .6rem .65rem 1rem;
+  }
+
+  .Preview-dots {
+    display: flex;
+    gap: .4rem;
+  }
+
+  .Preview-dots span {
+    width: .55rem;
+    height: .55rem;
+    border-radius: 50%;
+    background: rgba(201, 184, 255, .35);
+    box-shadow: 0 0 6px rgba(167, 139, 255, .4);
+  }
+
+  .Preview-address {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .6rem;
+    padding: .35rem 1rem;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    background: rgba(8, 6, 24, .7);
+    border: 1px solid rgba(201, 184, 255, .2);
+  }
+
+  .Preview-address > span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .Preview-star {
+    font-size: .7rem;
+    color: var(--lavender);
+  }
+
+  .Preview-tech {
+    font-family: var(--font-body);
+    font-size: .62rem;
+    font-weight: 700;
+    letter-spacing: .22em;
+    color: #f2a7d0;
+  }
+
+  .Preview-close {
+    width: 2rem;
+    height: 2rem;
+    flex-shrink: 0;
+    font-size: 1.6rem;
+    line-height: 1;
+    color: var(--lavender);
+    cursor: pointer;
+    transition: color .2s ease, text-shadow .2s ease;
+  }
+
+  .Preview-close:hover,
+  .Preview-close:focus-visible {
+    color: #fff;
+    text-shadow: 0 0 10px var(--lavender);
+  }
+
+  .Preview-viewport {
+    position: relative;
+    flex: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: #f4f2fa;
+    border: 1px solid rgba(201, 184, 255, .25);
+    scrollbar-color: var(--violet) #f4f2fa;
+  }
+
+  .Preview-loading {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    letter-spacing: .12em;
+    color: var(--purple);
+  }
+
+  .Preview-viewport:has(.is-loaded) .Preview-loading {
+    display: none;
+  }
+
+  /*
+    The screenshots are taken on a wide desktop, so most of their width is empty
+    background either side of the layout. Show only the middle part
+    (--visible of the width) and let the sides overflow out of view.
+  */
+  .Preview-image {
+    --visible: .62;
+    position: relative;
+    display: block;
+    width: calc(100% / var(--visible));
+    max-width: none;
+    height: auto;
+    margin-left: calc(50% - 50% / var(--visible));
+    opacity: 0;
+    transition: opacity .3s ease;
+  }
+
+  .Preview-image.is-loaded {
+    opacity: 1;
+  }
+
+  @media (max-width: 640px) {
+    .Preview {
+      width: calc(100% - 1rem);
+      height: calc(100dvh - 1rem);
+    }
+
+    .Preview-dots,
+    .Preview-tech {
+      display: none;
+    }
+  }
+</style>
