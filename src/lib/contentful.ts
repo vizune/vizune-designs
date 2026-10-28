@@ -1,5 +1,5 @@
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer';
-import { MARKS, BLOCKS, type Document } from '@contentful/rich-text-types';
+import { MARKS, BLOCKS, INLINES, type Document } from '@contentful/rich-text-types';
 
 export type RichTextDocument = Record<string, unknown>;
 
@@ -109,6 +109,23 @@ export function richTextToHtml(
       },
     },
     renderNode: {
+      // Links open in a new tab, apart from jump links within the same post
+      [INLINES.HYPERLINK]: (node, next) => {
+        const href = String(node.data?.uri ?? '');
+        const newTab = href.startsWith('#') ? '' : ' target="_blank" rel="noopener noreferrer"';
+
+        return `<a href="${escapeHtml(href)}"${newTab}>${next(node.content)}</a>`;
+      },
+
+      [INLINES.ASSET_HYPERLINK]: (node, next) => {
+        const assetId = node.data?.target?.sys?.id;
+        const href = normaliseAssetUrl(assetId ? assetsById?.get(assetId)?.fields?.file?.url : undefined);
+
+        if (!href) return next(node.content);
+
+        return `<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${next(node.content)}</a>`;
+      },
+
       [BLOCKS.PARAGRAPH]: (_node, next) => {
         const inner = next(_node.content);
 
