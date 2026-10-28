@@ -420,6 +420,19 @@ button:not(:disabled) {
       margin: 0 auto;
       border: 1px solid rgba(75, 58, 168, .25);
       box-shadow: 0 10px 30px rgba(27, 24, 48, .2);
+      transition: transform .3s ease, box-shadow .3s ease;
+    }
+
+    /* Opens the full image in the preview modal */
+    .content-image-link {
+      display: block;
+      cursor: zoom-in;
+
+      &:hover img,
+      &:focus-visible img {
+        transform: translateY(-2px);
+        box-shadow: 0 0 0 1px rgba(123, 92, 255, .35), 0 14px 34px rgba(123, 92, 255, .3);
+      }
     }
 
     figcaption {

@@ -155,15 +155,29 @@ export function richTextToHtml(
         const dimensionAttrs =
           width && height ? ` width="${width}" height="${height}"` : '';
 
+        // The link opens the full image in the preview modal (PreviewModal.astro),
+        // or as a plain link in a new tab if scripts are off
         return `
           <figure class="content-image">
-            <img
-              src="${escapeHtml(src)}"
-              alt="${escapeHtml(alt)}"
-              loading="lazy"
-              decoding="async"
-              ${dimensionAttrs}
-            />
+            <a
+              href="${escapeHtml(src)}"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="content-image-link"
+              data-preview
+              data-src="${escapeHtml(src)}"
+              data-title="${escapeHtml(title || alt)}"
+              data-alt="${escapeHtml(alt)}"
+              ${width && height ? `data-width="${width}" data-height="${height}"` : ''}
+            >
+              <img
+                src="${escapeHtml(src)}"
+                alt="${escapeHtml(alt)}"
+                loading="lazy"
+                decoding="async"
+                ${dimensionAttrs}
+              />
+            </a>
           </figure>
         `;
       },

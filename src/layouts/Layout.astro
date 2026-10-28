@@ -6,6 +6,7 @@ import Body from '@/components/layout/Body.astro';
 import Footer from '@/components/layout/Footer.astro';
 import Chatbox from '@/components/layout/Chatbox.astro';
 import CookieBanner from '@/components/layout/CookieBanner.astro';
+import PreviewModal from '@/components/ui/PreviewModal.astro';
 import "../assets/style.css";
 
 // `kicker`, `intro` and `date` are optional extras for the page heading.
@@ -40,5 +41,6 @@ const { title, description, heading, kicker, intro, date } = Astro.props;
 		<Footer />
 		<Chatbox />
 		<CookieBanner />
+		<PreviewModal />
 	</body>
 </html>

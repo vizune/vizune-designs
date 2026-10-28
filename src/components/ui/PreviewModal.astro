@@ -1,0 +1,291 @@
+---
+import Sparkle from '@/components/ornament/Sparkle.astro';
+
+// One "browser window" modal for the whole site. Any element with `data-preview`
+// and `data-src` opens it, e.g. the template examples on the Request page and the
+// images in blog and tutorial posts.
+//
+//   data-src             image to show
+//   data-title           text in the window's address bar
+//   data-subtitle        optional small label after the title
+//   data-alt             optional alt text for the image
+//   data-width/-height   optional size, so the window doesn't jump while it loads
+//   data-crop            optional fraction of the width to show (e.g. 0.62), for
+//                        full-page screenshots taken on a wide desktop
+//   data-ga-event        optional Google Analytics event to send, with data-ga-location
+---
+
+<dialog class="Preview" data-preview-dialog aria-labelledby="preview-title">
+  <div class="Preview-window">
+    <div class="Preview-bar">
+      <span class="Preview-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+      <p class="Preview-address">
+        <Sparkle class="Preview-star" />
+        <span id="preview-title" data-preview-title></span>
+        <span class="Preview-subtitle" data-preview-subtitle></span>
+      </p>
+      <button type="button" class="Preview-close" data-preview-close aria-label="Close preview">&times;</button>
+    </div>
+
+    <div class="Preview-viewport" data-preview-viewport tabindex="0">
+      <p class="Preview-loading" aria-hidden="true">Loading preview…</p>
+      <img class="Preview-image" data-preview-image alt="" />
+    </div>
+  </div>
+</dialog>
+
+<script is:inline>
+  (() => {
+    const dialog = document.querySelector('[data-preview-dialog]');
+    if (!dialog) return;
+
+    const title = dialog.querySelector('[data-preview-title]');
+    const subtitle = dialog.querySelector('[data-preview-subtitle]');
+    const viewport = dialog.querySelector('[data-preview-viewport]');
+    const image = dialog.querySelector('[data-preview-image]');
+
+    function open(trigger) {
+      const { src, width, height, crop } = trigger.dataset;
+
+      title.textContent = trigger.dataset.title || '';
+      subtitle.textContent = trigger.dataset.subtitle || '';
+
+      // Full-page screenshots fill a tall window and lose their empty sides;
+      // other images sit at their own size in a window that fits around them
+      dialog.classList.toggle('Preview--page', Boolean(crop));
+      image.style.setProperty('--visible', crop || '1');
+
+      // Reserve the image's height up front so the window doesn't jump while it loads
+      image.classList.remove('is-loaded');
+      image.removeAttribute('src');
+      image.removeAttribute('width');
+      image.removeAttribute('height');
+      if (width && height) {
+        image.width = Number(width);
+        image.height = Number(height);
+      }
+      image.alt = trigger.dataset.alt || trigger.dataset.title || '';
+      image.src = src;
+
+      dialog.showModal();
+      viewport.scrollTop = 0;
+
+      if (trigger.dataset.gaEvent && typeof window.gtag === 'function') {
+        window.gtag('event', trigger.dataset.gaEvent, {
+          template_name: trigger.dataset.title || '',
+          action: 'preview',
+          location: trigger.dataset.gaLocation || '',
+        });
+      }
+    }
+
+    // Delegated, so it also catches images inside rich text added with set:html
+    document.addEventListener('click', (event) => {
+      const trigger = event.target.closest?.('[data-preview]');
+      if (!trigger?.dataset.src || trigger.disabled) return;
+
+      // Ctrl/Cmd/Shift-click or middle-click on a link still opens it the normal way
+      if (event.ctrlKey || event.metaKey || event.shiftKey || event.button !== 0) return;
+
+      event.preventDefault();
+      open(trigger);
+    });
+
+    image.addEventListener('load', () => image.classList.add('is-loaded'));
+
+    dialog.querySelector('[data-preview-close]')?.addEventListener('click', () => dialog.close());
+
+    // Clicking the dimmed backdrop (outside the window) closes it too
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+  })();
+</script>
+
+<style>
+  .Preview {
+    width: min(72rem, 100% - 2rem);
+    max-width: none;
+    height: fit-content;
+    max-height: none;
+    margin: auto;
+    padding: 0;
+    color: #e9e6f7;
+    background: none;
+    border: 0;
+    overflow: visible;
+  }
+
+  .Preview--page {
+    height: min(52rem, 100dvh - 2rem);
+  }
+
+  .Preview[open] {
+    animation: preview-in .3s cubic-bezier(.22, 1, .36, 1);
+  }
+
+  @keyframes preview-in {
+    from { opacity: 0; transform: translateY(12px) scale(.98); }
+  }
+
+  .Preview::backdrop {
+    background: rgba(5, 4, 15, .78);
+    backdrop-filter: blur(4px);
+  }
+
+  :global(html:has(.Preview[open])) {
+    overflow: hidden;
+  }
+
+  .Preview-window {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-height: calc(100dvh - 2rem);
+    padding: 6px;
+    background: linear-gradient(180deg, #1d1840, #07061a);
+    border: 1px solid rgba(201, 184, 255, .55);
+    box-shadow: inset 0 0 0 3px #07061a, inset 0 0 0 4px rgba(201, 184, 255, .25), 0 0 60px rgba(123, 92, 255, .35);
+  }
+
+  .Preview-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: .55rem .6rem .65rem 1rem;
+  }
+
+  .Preview-dots {
+    display: flex;
+    gap: .4rem;
+  }
+
+  .Preview-dots span {
+    width: .55rem;
+    height: .55rem;
+    border-radius: 50%;
+    background: rgba(201, 184, 255, .35);
+    box-shadow: 0 0 6px rgba(167, 139, 255, .4);
+  }
+
+  .Preview-address {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .6rem;
+    padding: .35rem 1rem;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    background: rgba(8, 6, 24, .7);
+    border: 1px solid rgba(201, 184, 255, .2);
+  }
+
+  .Preview-address > span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .Preview-star {
+    font-size: .7rem;
+    color: var(--lavender);
+  }
+
+  .Preview-subtitle {
+    font-family: var(--font-body);
+    font-size: .62rem;
+    font-weight: 700;
+    letter-spacing: .22em;
+    color: #f2a7d0;
+  }
+
+  .Preview-close {
+    width: 2rem;
+    height: 2rem;
+    flex-shrink: 0;
+    font-size: 1.6rem;
+    line-height: 1;
+    color: var(--lavender);
+    cursor: pointer;
+    transition: color .2s ease, text-shadow .2s ease;
+  }
+
+  .Preview-close:hover,
+  .Preview-close:focus-visible {
+    color: #fff;
+    text-shadow: 0 0 10px var(--lavender);
+  }
+
+  .Preview-viewport {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 8rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: #f4f2fa;
+    border: 1px solid rgba(201, 184, 255, .25);
+    scrollbar-color: var(--violet) #f4f2fa;
+  }
+
+  .Preview-loading {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    letter-spacing: .12em;
+    color: var(--purple);
+  }
+
+  .Preview-viewport:has(.is-loaded) .Preview-loading {
+    display: none;
+  }
+
+  /* An ordinary image: its own size, never wider than the window */
+  .Preview-image {
+    position: relative;
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+    opacity: 0;
+    transition: opacity .3s ease;
+  }
+
+  /*
+    Full-page screenshots are taken on a wide desktop, so most of their width is
+    empty background either side of the layout. Show only the middle part
+    (--visible of the width) and let the sides overflow out of view.
+  */
+  .Preview--page .Preview-image {
+    width: calc(100% / var(--visible));
+    max-width: none;
+    margin-left: calc(50% - 50% / var(--visible));
+  }
+
+  .Preview-image.is-loaded {
+    opacity: 1;
+  }
+
+  @media (max-width: 640px) {
+    .Preview {
+      width: calc(100% - 1rem);
+    }
+
+    .Preview--page {
+      height: calc(100dvh - 1rem);
+    }
+
+    .Preview-dots,
+    .Preview-subtitle {
+      display: none;
+    }
+  }
+</style>
