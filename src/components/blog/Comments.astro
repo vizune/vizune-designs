@@ -1,0 +1,88 @@
+---
+/**
+ * Remark42 comments, shared with Vizune Reviews' comments server
+ * (site ID "design" keeps these comments separate from the reviews).
+ * Shows "coming soon" until PUBLIC_REMARK42_HOST is set.
+ *
+ * Usage: <Comments path={`/blog/${slug}/`} />
+ */
+interface Props {
+  /** Page path, used to give each post its own comment thread */
+  path: string;
+}
+
+const { path } = Astro.props;
+const host = import.meta.env.PUBLIC_REMARK42_HOST?.replace(/\/$/, '');
+const siteId = import.meta.env.PUBLIC_REMARK42_SITE_ID || 'design';
+// A fixed public origin keeps one thread per post, even when testing locally
+const origin = import.meta.env.PUBLIC_SITE_URL?.replace(/\/$/, '');
+---
+
+<section class="Comments" id="comments" aria-labelledby="comments-title">
+  <h2 class="PanelHeading" id="comments-title">Comments</h2>
+  {
+    host ? (
+      <div id="remark42" data-host={host} data-site-id={siteId} data-origin={origin} data-path={path}>
+        <noscript>Comments need JavaScript turned on.</noscript>
+      </div>
+    ) : (
+      <p class="Comments-soon">Comments are coming soon.</p>
+    )
+  }
+</section>
+
+<script>
+  const el = document.getElementById('remark42');
+  if (el) {
+    const { host, siteId, origin, path } = el.dataset;
+    const config = {
+      host,
+      site_id: siteId,
+      url: (origin || location.origin) + path,
+      components: ['embed'],
+      // The post sits on the light panel
+      theme: 'light',
+      locale: 'en',
+      show_email_subscription: false,
+      no_footer: true,
+      // Widget colours, matched to the site palette. Named colours are "r, g, b".
+      // (Older name for Remark42's custom_properties option; works on every version.)
+      __colors__: {
+        '--primary-color': '75, 58, 168', // --purple: links, buttons, highlights
+        '--primary-brighter-color': '123, 92, 255', // --violet: hover
+        '--primary-darker-color': '36, 4, 112', // --color-indigo
+        '--primary-text-color': '27, 24, 48', // --ink: comment text
+        '--secondary-text-color': '74, 69, 102', // dates, meta text
+        '--primary-background-color': '255, 255, 255', // comment box
+        '--line-color': 'rgba(75, 58, 168, 0.2)', // dividers
+        '--line-brighter-color': 'rgba(75, 58, 168, 0.35)',
+        '--font-family': "'Mulish', system-ui, sans-serif",
+      },
+    };
+    (window as unknown as { remark_config: typeof config }).remark_config = config;
+
+    // Official Remark42 loader: module build for modern browsers, legacy fallback otherwise
+    for (const component of config.components) {
+      const script = document.createElement('script');
+      const modern = 'noModule' in script;
+      if (modern) script.type = 'module';
+      else script.async = true;
+      script.defer = true;
+      script.src = `${host}/web/${component}${modern ? '.mjs' : '.js'}`;
+      (document.head || document.body).appendChild(script);
+    }
+  }
+</script>
+
+<style>
+  .Comments {
+    max-width: 40rem;
+    margin: 3.5rem auto 0;
+    scroll-margin-top: 2rem;
+  }
+
+  .Comments-soon {
+    text-align: center;
+    color: #4a4566;
+  }
+</style>

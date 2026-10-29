@@ -1,6 +1,7 @@
 ---
 import Layout from '@/layouts/Layout.astro';
 import BlogArticle from '@/components/blog/BlogArticle.astro';
+import Comments from '@/components/blog/Comments.astro';
 import {
   fetchContentfulEntries,
   type RichTextDocument,
@@ -75,5 +76,7 @@ const description = entry.fields.description ?? title;
   intro={entry.fields.description}
   date={entry.fields.publishDate}
 >
-  <BlogArticle entry={entry} assetsById={assetsById} prev={prev} next={next} />
+  <BlogArticle entry={entry} assetsById={assetsById} prev={prev} next={next}>
+    <Comments path={`/blog/${entry.fields.slug}/`} />
+  </BlogArticle>
 </Layout>

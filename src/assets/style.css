@@ -180,8 +180,8 @@ button:not(:disabled) {
   /* Divider: the traced flourish SVG, coloured from CSS */
   hr {
     background: var(--midnight);
-    -webkit-mask: url('/divider.svg') center / contain no-repeat;
-    mask: url('/divider.svg') center / contain no-repeat;
+    -webkit-mask: url('/images/divider.svg') center / contain no-repeat;
+    mask: url('/images/divider.svg') center / contain no-repeat;
     height: 60px;
     width: 67px;
     border: none;
@@ -247,7 +247,7 @@ button:not(:disabled) {
         top: .42em;
         width: 1rem;
         height: 1rem;
-        background: url('/orb.webp') center / contain no-repeat;
+        background: url('/images/orb.webp') center / contain no-repeat;
         filter: drop-shadow(0 1px 3px rgba(75, 58, 168, .35));
       }
     }

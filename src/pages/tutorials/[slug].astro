@@ -1,6 +1,7 @@
 ---
 import Layout from '@/layouts/Layout.astro';
 import PostPagination from '@/components/ui/PostPagination.astro';
+import Comments from '@/components/blog/Comments.astro';
 import {
   fetchContentfulEntries,
   richTextToHtml,
@@ -84,6 +85,8 @@ const html = richTextToHtml(
     ) : null}
 
     <div class="Prose" set:html={html}></div>
+
+    <Comments path={`/tutorials/${entry.fields.slug}/`} />
 
     <PostPagination prev={prev} next={next} prevLabel="Previous tutorial" nextLabel="Next tutorial" />
   </article>

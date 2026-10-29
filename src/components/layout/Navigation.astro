@@ -75,7 +75,7 @@ const isCurrent = (link: string) =>
 }
 
 /*
- * The bar is framed by two ornamental end caps (public/nav-cap.svg) whose
+ * The bar is framed by two ornamental end caps (public/images/nav-cap.svg) whose
  * rails continue as the bar's top and bottom lines.
  * Measurements from the SVG (834 x 510 units): each rail is 14 units thick,
  * its outer edges sit 21.5 units in from the top and bottom, and the straight
@@ -120,8 +120,8 @@ const isCurrent = (link: string) =>
     width: var(--cap-w);
     height: var(--cap-h);
     background: var(--line);
-    -webkit-mask: url('/nav-cap.svg') center / 100% 100% no-repeat;
-    mask: url('/nav-cap.svg') center / 100% 100% no-repeat;
+    -webkit-mask: url('/images/nav-cap.svg') center / 100% 100% no-repeat;
+    mask: url('/images/nav-cap.svg') center / 100% 100% no-repeat;
     pointer-events: none;
 }
 

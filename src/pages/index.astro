@@ -1,6 +1,7 @@
 ---
 import Layout from '@/layouts/Layout.astro';
 import BlogArticle from '@/components/blog/BlogArticle.astro';
+import Comments from '@/components/blog/Comments.astro';
 import {
   fetchContentfulEntries,
   type RichTextDocument,
@@ -48,6 +49,8 @@ const prev = previous
       <p class="text-center pt-6">
         <a href="/blog/" class="Btn Btn--small">All posts <span aria-hidden="true">›</span></a>
       </p>
+      {/* Same thread as the post's own page, so comments match in both places */}
+      {latest.fields.slug && <Comments path={`/blog/${latest.fields.slug}/`} />}
     </BlogArticle>
   ) : (
     <p class="PanelIntro">A creative hub where anime, gaming, design and web development merge.</p>
