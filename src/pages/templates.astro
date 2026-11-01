@@ -153,7 +153,7 @@ const sorted = [...items].sort(
             ['Published', formatUkDate(publishDate)],
             ['Tech stack', techStack],
             ['Category', category],
-            ['Series', series],
+            [category.trim().toLowerCase() === 'artist/mangaka' ? 'Artist' : 'Series', series],
             ['Character', character],
           ].filter(([, value]) => value);
 
