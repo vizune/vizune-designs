@@ -2,22 +2,63 @@
 const { page, link } = Astro.props;
 ---
 
-<div class="z-20 block w-full md:w-auto">
-<a
-  href={link}
-  class="relative block w-full p-4 md:p-5
-         text-white
-         border-b-2 md:border-b-0 border-indigo
-         overflow-hidden
-         transform-gpu transition-colors duration-300 ease-in-out
-         before:content-[''] before:absolute before:inset-0 before:-z-10
-         before:bg-indigo/60
-         before:origin-top before:scale-y-0
-         before:transform-gpu
-         before:transition-transform before:duration-500
-         before:ease-[cubic-bezier(0.22,1,0.36,1)]
-         hover:before:scale-y-100"
->
-    <span class="text-lg uppercase font-medium tracking-widest">{page}</span>
+<div class="NavLink">
+<a href={link} class="NavLink-link">
+    <span class="NavLink-text">{page}</span>
   </a>
 </div>
+
+<style>
+.NavLink {
+  z-index: 20;
+  display: block;
+  width: 100%;
+}
+
+.NavLink-link {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 1rem;
+  color: #fff;
+  border-bottom: 2px solid var(--indigo);
+  overflow: hidden;
+  transform: translateZ(0);
+  transition: color .3s ease-in-out, background-color .3s ease-in-out, border-color .3s ease-in-out;
+}
+
+/* Indigo wash that drops down from the top on hover */
+.NavLink-link::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -10;
+  background: rgba(36, 4, 112, .6);
+  transform-origin: top;
+  transform: translateZ(0) scaleY(0);
+  transition: transform .5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.NavLink-link:hover::before {
+  transform: translateZ(0) scaleY(1);
+}
+
+.NavLink-text {
+  font-size: 1.125rem;
+  line-height: calc(1.75 / 1.125);
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+@media (min-width: 768px) {
+  .NavLink {
+    width: auto;
+  }
+
+  .NavLink-link {
+    padding: 1.25rem;
+    border-bottom-width: 0;
+  }
+}
+</style>

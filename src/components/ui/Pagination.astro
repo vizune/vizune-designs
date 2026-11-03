@@ -8,7 +8,7 @@ const { id, pageSize = 12 } = Astro.props;
 ---
 
 <nav
-  class="mt-10 flex items-center justify-center gap-5"
+  class="Pagination"
   data-pagination
   data-pagination-id={id}
   data-page-size={pageSize}
@@ -17,7 +17,7 @@ const { id, pageSize = 12 } = Astro.props;
     <span aria-hidden="true">‹</span> Prev
   </button>
 
-  <div class="hidden font-display text-lg tracking-[.12em] uppercase text-purple" data-page-label>
+  <div class="Pagination-label" data-page-label hidden>
     Page 1 of 1
   </div>
 
@@ -58,7 +58,7 @@ const { id, pageSize = 12 } = Astro.props;
 
       if (label) {
         label.textContent = `Page ${state.page} of ${pages}`;
-        label.classList.remove('hidden');
+        label.hidden = false;
       }
 
       if (prevBtn) {
@@ -115,3 +115,22 @@ const { id, pageSize = 12 } = Astro.props;
     render();
   })();
 </script>
+
+<style>
+.Pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  margin-top: 2.5rem;
+}
+
+.Pagination-label {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  line-height: calc(1.75 / 1.125);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--purple);
+}
+</style>

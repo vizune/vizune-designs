@@ -81,30 +81,30 @@ const publishDateUk = formatUkDate(publishDate);
 ---
 
 <article
-  class="render-card Card Card--hover p-3"
+  class="render-card Card Card--hover Render"
   data-tags={filterableTags.join(' ')}
 >
-  <div class="Card-media bg-[radial-gradient(ellipse_at_50%_100%,rgba(123,92,255,.3),transparent_70%)]">
+  <div class="Card-media Render-media">
     {imgUrl ? (
       <img
         src={imgUrl}
         alt={alt}
         loading="lazy"
         decoding="async"
-        class="!h-auto"
+        class="Render-img"
       />
     ) : (
-      <div class="aspect-[16/10] flex items-center justify-center text-sm text-lavender/60">
+      <div class="Render-empty">
         No thumbnail
       </div>
     )}
   </div>
 
-  <div class="flex flex-col flex-1 px-4 pt-5 pb-3">
-    <h3 class="Card-title text-center text-[1.45rem]">
+  <div class="Render-body">
+    <h3 class="Card-title Render-title">
       {prefix ? (
         <>
-          <span class="Kicker justify-center mb-1">{prefix.replace(/:\s*$/, '')}</span>
+          <span class="Kicker Render-kicker">{prefix.replace(/:\s*$/, '')}</span>
           <span>{rest}</span>
         </>
       ) : (
@@ -112,7 +112,7 @@ const publishDateUk = formatUkDate(publishDate);
       )}
     </h3>
 
-    <dl class="Card-meta mt-4 pt-4 border-t border-lavender/20 flex-1">
+    <dl class="Card-meta Render-meta">
       {publishDateUk ? (<><dt>Published</dt><dd>{publishDateUk}</dd></>) : null}
       {dimensions ? (<><dt>Dimensions</dt><dd>{dimensions}</dd></>) : null}
       {fileSize ? (<><dt>File size</dt><dd>{fileSize}</dd></>) : null}
@@ -124,7 +124,7 @@ const publishDateUk = formatUkDate(publishDate);
       rel="noopener noreferrer"
       data-render-download
       data-render-title={title}
-      class="Btn Btn--small mt-5 w-full"
+      class="Btn Btn--small Render-download"
     >
       Download
       <Icon name="newTab" title="Opens url in a new tab" size="small" />
@@ -149,3 +149,57 @@ const publishDateUk = formatUkDate(publishDate);
     });
   });
 </script>
+
+<style>
+.Render {
+  padding: .75rem;
+}
+
+.Render-media {
+  background-image: radial-gradient(ellipse at 50% 100%, rgba(123, 92, 255, .3), transparent 70%);
+}
+
+/* Keep the render's own proportions rather than filling the frame */
+.Render-img {
+  height: auto;
+}
+
+.Render-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 16 / 10;
+  font-size: .875rem;
+  line-height: calc(1.25 / .875);
+  color: rgba(201, 184, 255, .6);
+}
+
+.Render-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 1.25rem 1rem .75rem;
+}
+
+.Render-title {
+  font-size: 1.45rem;
+  text-align: center;
+}
+
+.Render-kicker {
+  justify-content: center;
+  margin-bottom: .25rem;
+}
+
+.Render-meta {
+  flex: 1;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(201, 184, 255, .2);
+}
+
+.Render-download {
+  width: 100%;
+  margin-top: 1.25rem;
+}
+</style>

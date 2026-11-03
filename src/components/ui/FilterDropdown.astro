@@ -12,19 +12,61 @@ const {
 } = Astro.props;
 ---
 
-<div class="flex flex-wrap gap-3 justify-center items-center">
-  <div class="relative w-full md:w-80">
+<div class="Filter">
+  <div class="Filter-field">
     <select class="Field" value={value} disabled={disabled} aria-label={label}>
       <slot />
     </select>
-    <span class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-purple">
-      <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+    <span class="Filter-chevron">
+      <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
         <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 111.08 1.04l-4.24 4.38a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
       </svg>
     </span>
   </div>
 
-  <button type="button" data-clear-filter class="Btn Btn--small h-12">
+  <button type="button" data-clear-filter class="Btn Btn--small Filter-clear">
     Clear filter
   </button>
 </div>
+
+<style>
+.Filter {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: .75rem;
+}
+
+.Filter-field {
+  position: relative;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .Filter-field {
+    width: 20rem;
+  }
+}
+
+/* Chevron drawn over the native select arrow (the select uses appearance: none) */
+.Filter-chevron {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: .75rem;
+  display: flex;
+  align-items: center;
+  color: var(--purple);
+  pointer-events: none;
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+.Filter-clear {
+  height: 3rem;
+}
+</style>

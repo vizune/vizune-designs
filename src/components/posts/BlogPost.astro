@@ -67,11 +67,11 @@ const alt =
   data-blog-title={title}
   data-blog-slug={slug}
   class:list={[
-    'blog-card Card Card--hover p-3',
-    featured ? 'md:grid md:grid-cols-[1.45fr_1fr] md:items-center' : 'sm:grid sm:grid-cols-[170px_1fr]',
+    'blog-card Card Card--hover Post',
+    featured ? 'Post--featured' : 'Post--list',
   ]}
 >
-  <div class:list={['Card-media', featured ? 'aspect-[1.92]' : 'aspect-square']}>
+  <div class:list={['Card-media', featured ? 'Post-media--wide' : 'Post-media']}>
     {imgUrl ? (
       <img
         src={imgUrl}
@@ -80,29 +80,126 @@ const alt =
         decoding="async"
       />
     ) : (
-      <div class="h-full w-full flex items-center justify-center text-sm text-lavender/60">
+      <div class="Post-empty">
         No thumbnail
       </div>
     )}
   </div>
 
-  <div class:list={['flex flex-col justify-center', featured ? 'px-4 pt-6 pb-3 md:px-8 md:py-6' : 'px-4 pt-5 pb-2 sm:px-5 sm:py-3']}>
+  <div class:list={['Post-body', { 'Post-body--wide': featured }]}>
     <p class="Kicker">
       <Sparkle class="Kicker-star" />
       {featured ? 'Latest news' : 'News'}
-      {publishDate && <span class="text-lavender/70 tracking-[.16em]">· {publishDate}</span>}
+      {publishDate && <span class="Post-date">· {publishDate}</span>}
     </p>
 
-    <h3 class:list={['Card-title mt-2', featured ? 'md:text-[2.2rem]' : 'text-[1.45rem]']}>
+    <h3 class:list={['Card-title Post-title', featured ? 'Post-title--wide' : 'Post-title--small']}>
       {title}
     </h3>
 
     {description ? (
-      <p class:list={['Card-text mt-3', { 'line-clamp-4': !featured }]}>
+      <p class:list={['Card-text Post-text', { 'Post-text--clamp': !featured }]}>
         {description}
       </p>
     ) : null}
 
-    <span class="Card-more mt-4">Read more <span aria-hidden="true">›</span></span>
+    <span class="Card-more Post-more">Read more <span aria-hidden="true">›</span></span>
   </div>
 </a>
+
+<style>
+.Post {
+  padding: .75rem;
+}
+
+@media (min-width: 768px) {
+  .Post--featured {
+    display: grid;
+    grid-template-columns: 1.45fr 1fr;
+    align-items: center;
+  }
+}
+
+@media (min-width: 640px) {
+  .Post--list {
+    display: grid;
+    grid-template-columns: 170px 1fr;
+  }
+}
+
+.Post-media {
+  aspect-ratio: 1;
+}
+
+.Post-media--wide {
+  aspect-ratio: 1.92;
+}
+
+.Post-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: .875rem;
+  line-height: calc(1.25 / .875);
+  color: rgba(201, 184, 255, .6);
+}
+
+.Post-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1.25rem 1rem .5rem;
+}
+
+@media (min-width: 640px) {
+  .Post-body {
+    padding: .75rem 1.25rem;
+  }
+}
+
+.Post-body--wide {
+  padding: 1.5rem 1rem .75rem;
+}
+
+@media (min-width: 768px) {
+  .Post-body--wide {
+    padding: 1.5rem 2rem;
+  }
+}
+
+.Post-date {
+  color: rgba(201, 184, 255, .7);
+  letter-spacing: .16em;
+}
+
+.Post-title {
+  margin-top: .5rem;
+}
+
+.Post-title--small {
+  font-size: 1.45rem;
+}
+
+@media (min-width: 768px) {
+  .Post-title--wide {
+    font-size: 2.2rem;
+  }
+}
+
+.Post-text {
+  margin-top: .75rem;
+}
+
+.Post-text--clamp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
+}
+
+.Post-more {
+  margin-top: 1rem;
+}
+</style>

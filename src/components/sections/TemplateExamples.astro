@@ -21,10 +21,10 @@ const { examples } = Astro.props as Props;
 
 <div class="Examples" data-examples>
   {examples.map((example) => (
-    <article class="Card Card--hover p-3">
+    <article class="Card Card--hover Examples-card">
       <button
         type="button"
-        class="Examples-thumb Card-media aspect-square"
+        class="Examples-thumb Card-media"
         data-preview
         data-title={example.title}
         data-subtitle={example.techStack}
@@ -40,16 +40,16 @@ const { examples } = Astro.props as Props;
         {example.thumbnail && <img src={example.thumbnail} alt="" loading="lazy" decoding="async" />}
       </button>
 
-      <div class="px-3 pt-4 pb-2 flex flex-col flex-1">
+      <div class="Examples-body">
         {example.techStack && (
           <p class="Kicker">
             <Sparkle class="Kicker-star" />
             {example.techStack}
           </p>
         )}
-        <h3 class="Card-title mt-2 text-[1.4rem]">{example.title}</h3>
-        {example.date && <p class="Card-text mt-1">{example.date}</p>}
-        {example.description && <p class="Card-text mt-3 line-clamp-4">{example.description}</p>}
+        <h3 class="Card-title Examples-title">{example.title}</h3>
+        {example.date && <p class="Card-text Examples-date">{example.date}</p>}
+        {example.description && <p class="Card-text Examples-desc">{example.description}</p>}
 
         <div class="Examples-actions">
           {example.screenshot && (
@@ -83,15 +83,44 @@ const { examples } = Astro.props as Props;
     gap: 1.5rem;
   }
 
+  .Examples-card {
+    padding: .75rem;
+  }
+
   .Examples-thumb {
     display: block;
     width: 100%;
+    aspect-ratio: 1;
     padding: 0;
     cursor: zoom-in;
   }
 
   .Examples-thumb:disabled {
     cursor: default;
+  }
+
+  .Examples-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 1rem .75rem .5rem;
+  }
+
+  .Examples-title {
+    margin-top: .5rem;
+    font-size: 1.4rem;
+  }
+
+  .Examples-date {
+    margin-top: .25rem;
+  }
+
+  .Examples-desc {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    overflow: hidden;
+    margin-top: .75rem;
   }
 
   .Examples-actions {

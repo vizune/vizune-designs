@@ -94,8 +94,8 @@ function resolveAsset(post: Post) {
 ---
 
 
-<div class="avatar-list mb-8" data-category={category}>
-  <h2 class="PanelHeading mt-6">{title}</h2>
+<div class="avatar-list" data-category={category}>
+  <h2 class="PanelHeading avatar-heading">{title}</h2>
 
   <FilterDropdown label={`Filter ${title}`}>
     <option value="">-- Filter {title} --</option>
@@ -106,7 +106,7 @@ function resolveAsset(post: Post) {
     ))}
   </FilterDropdown>
 
-  <div class={`grid gap-4 wrapper${category} justify-center mt-8`}>
+  <div class={`avatar-grid wrapper${category}`}>
     {posts.map((post) => {
       const allTagIds = post.metadata.tags.map(t => t.sys.id);
       const filterableTags = allTagIds.filter(id => !EXCLUDED_TAGS.has(id));
@@ -172,7 +172,7 @@ function resolveAsset(post: Post) {
           const matches = matchesTag(card, currentTag);
 
           if (!matches) {
-            card.classList.add('hidden');
+            card.hidden = true;
             return;
           }
 
@@ -180,7 +180,7 @@ function resolveAsset(post: Post) {
             matchedIndex >= start &&
             matchedIndex < end;
 
-          card.classList.toggle('hidden', !inPage);
+          card.hidden = !inPage;
           matchedIndex += 1;
         });
 
@@ -228,6 +228,9 @@ function resolveAsset(post: Post) {
 </div>
 
 <style>
+.avatar-list { margin-bottom: 2rem; }
+.avatar-heading { margin-top: 1.5rem; }
+.avatar-grid { display: grid; gap: 1rem; justify-content: center; margin-top: 2rem; }
 .wrapper100 { grid-template-columns: repeat(auto-fit, 250px); }
 .wrapper100 .wrapper-info { display: flex; margin-top: .5rem; }
 .wrapper200 { grid-template-columns: repeat(auto-fit, 200px); }

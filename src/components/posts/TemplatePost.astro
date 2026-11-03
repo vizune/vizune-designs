@@ -57,7 +57,7 @@ const alt = asset?.fields?.description || asset?.fields?.title || title;
   data-demo-url={post.fields.demoUrl ?? ''}
   data-repo-url={post.fields.repoUrl ?? ''}
   data-download-url={post.fields.downloadUrl ?? ''}
-  class="tarot-card absolute left-1/2 top-1/2 w-[180px] sm:w-[230px] md:w-[262px] aspect-[0.62]"
+  class="tarot-card"
 >
   <div class="tarot-frame">
     {imgUrl ? (
@@ -66,10 +66,10 @@ const alt = asset?.fields?.description || asset?.fields?.title || title;
         alt={alt}
         loading="lazy"
         decoding="async"
-        class="h-full w-full object-cover"
+        class="tarot-img"
       />
     ) : (
-      <div class="h-full w-full flex items-center justify-center text-lavender/60 text-sm">
+      <div class="tarot-empty">
         No banner
       </div>
     )}
@@ -82,6 +82,11 @@ const alt = asset?.fields?.description || asset?.fields?.title || title;
 </article>
 <style>
 .tarot-card {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 180px;
+  aspect-ratio: .62;
   opacity: 0;
   pointer-events: none;
   transform: translate(-50%, -50%) scale(0.85);
@@ -89,6 +94,18 @@ const alt = asset?.fields?.description || asset?.fields?.title || title;
     transform 0.45s cubic-bezier(.22,1,.36,1),
     opacity 0.35s ease,
     filter 0.35s ease;
+}
+
+@media (min-width: 640px) {
+  .tarot-card {
+    width: 230px;
+  }
+}
+
+@media (min-width: 768px) {
+  .tarot-card {
+    width: 262px;
+  }
 }
 
 /* Gilded tarot frame: lavender rim, inset night-blue mat and corner brackets */
@@ -119,6 +136,23 @@ const alt = asset?.fields?.description || asset?.fields?.title || title;
     linear-gradient(var(--c), var(--c)) bottom right / 20px 1px,
     linear-gradient(var(--c), var(--c)) bottom right / 1px 20px;
   background-repeat: no-repeat;
+}
+
+.tarot-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tarot-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: .875rem;
+  line-height: calc(1.25 / .875);
+  color: rgba(201, 184, 255, .6);
 }
 
 .tarot-frame img {

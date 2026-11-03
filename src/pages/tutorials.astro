@@ -48,7 +48,7 @@ const sorted = [...items].sort(
   intro="Step-by-step guides for graphics and web design."
 >
   <div class="tutorials-list" data-section="tutorials">
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" data-grid>
+    <div class="tutorials-grid" data-grid>
       {sorted.map((post) => (
         <TutorialPostCard post={post} assetsById={assetsById} />
       ))}
@@ -95,3 +95,17 @@ const sorted = [...items].sort(
     </script>
   </div>
 </Layout>
+
+<style>
+  .tutorials-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    .tutorials-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

@@ -77,7 +77,7 @@ const html = richTextToHtml(
 >
   <article>
     {demoUrl ? (
-      <p class="text-center mb-10">
+      <p class="Tutorial-demo">
         <a href={demoUrl} target="_blank" rel="noopener noreferrer" class="Btn">
           View the demo <span aria-hidden="true">›</span>
         </a>
@@ -91,3 +91,10 @@ const html = richTextToHtml(
     <PostPagination prev={prev} next={next} prevLabel="Previous tutorial" nextLabel="Next tutorial" />
   </article>
 </Layout>
+
+<style>
+  .Tutorial-demo {
+    margin-bottom: 2.5rem;
+    text-align: center;
+  }
+</style>

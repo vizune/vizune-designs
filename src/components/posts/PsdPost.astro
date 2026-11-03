@@ -53,28 +53,28 @@ const alt =
 const trackingId = `psd-${post.sys.id}`;
 ---
 
-<article class="psd-card Card Card--hover p-3" id={trackingId}>
-  <div class="Card-media flex items-center justify-center p-4 min-h-[182px] bg-[radial-gradient(ellipse_at_50%_0%,rgba(123,92,255,.25),transparent_70%)]">
+<article class="psd-card Card Card--hover Psd" id={trackingId}>
+  <div class="Card-media Psd-media">
     {imgUrl ? (
       <img
         src={imgUrl}
         alt={alt}
         loading="lazy"
         decoding="async"
-        class="!w-auto !h-auto max-h-[150px] !object-contain"
+        class="Psd-img"
       />
     ) : (
-      <span class="text-sm text-lavender/60">No thumbnail</span>
+      <span class="Psd-empty">No thumbnail</span>
     )}
   </div>
 
-  <div class="flex flex-col flex-1 items-center text-center px-4 pt-5 pb-3">
+  <div class="Psd-body">
     <p class="Kicker">
       <Sparkle class="Kicker-star" />
       PSD download
     </p>
 
-    <h2 class="Card-title mt-2 flex-1">{title}</h2>
+    <h2 class="Card-title Psd-title">{title}</h2>
 
     <a
       href={downloadUrl}
@@ -83,7 +83,7 @@ const trackingId = `psd-${post.sys.id}`;
       data-psd-download
       data-psd-title={title}
       data-psd-size={fileSize}
-      class="Btn Btn--small mt-5 w-full"
+      class="Btn Btn--small Psd-download"
     >
       Download{fileSize ? ` (${fileSize})` : ''} <Icon name="newTab" title="Opens url in a new tab" size="small" />
     </a>
@@ -111,3 +111,51 @@ const trackingId = `psd-${post.sys.id}`;
     });
   }
 </script>
+
+<style>
+.Psd {
+  padding: .75rem;
+}
+
+.Psd-media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 182px;
+  padding: 1rem;
+  background-image: radial-gradient(ellipse at 50% 0%, rgba(123, 92, 255, .25), transparent 70%);
+}
+
+/* Show the whole thumbnail rather than cropping it like other card images */
+.Psd-img {
+  width: auto;
+  height: auto;
+  max-height: 150px;
+  object-fit: contain;
+}
+
+.Psd-empty {
+  font-size: .875rem;
+  line-height: calc(1.25 / .875);
+  color: rgba(201, 184, 255, .6);
+}
+
+.Psd-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-items: center;
+  padding: 1.25rem 1rem .75rem;
+  text-align: center;
+}
+
+.Psd-title {
+  flex: 1;
+  margin-top: .5rem;
+}
+
+.Psd-download {
+  width: 100%;
+  margin-top: 1.25rem;
+}
+</style>

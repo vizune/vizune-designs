@@ -99,7 +99,7 @@ const linkExchangeButtons = [
             alt={`Vizune link button version ${[3, 1, 2][i]}`}
             width="88"
             height="31"
-            class="[image-rendering:pixelated]"
+            class="Pixelated"
           />
         </span>
       ))}
@@ -111,30 +111,30 @@ const linkExchangeButtons = [
     </p>
   </section>
 
-  <div class="grid gap-5 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 max-w-5xl mx-auto mt-8">
+  <div class="Exchange">
     {linkExchangeButtons.map((button) => (
       <a
         href={button.url}
         title={button.name}
         target="_blank"
         rel="noopener noreferrer"
-        class="Card Card--hover items-center p-4 text-center"
+        class="Card Card--hover Exchange-card"
       >
-        <span class="flex items-center justify-center w-full min-h-[64px] border border-lavender/20 bg-[#08061a]">
+        <span class="Exchange-button">
           <img
             src={button.image.src}
             alt={`${button.name} button`}
             width="88"
             height="31"
-            class="[image-rendering:pixelated]"
+            class="Pixelated"
           />
         </span>
-        <span class="Card-title mt-3 text-[1.1rem]">{button.name}</span>
+        <span class="Card-title Exchange-name">{button.name}</span>
       </a>
     ))}
   </div>
 
-  <div class="flex flex-wrap justify-center gap-4 max-w-5xl mx-auto mt-6">
+  <div class="Exchange-links">
     {linkExchangeList.map((link) => (
       <a
         href={link.url}
@@ -156,11 +156,66 @@ const linkExchangeButtons = [
     margin-bottom: 2.5rem;
   }
 
+  /* 88x31 buttons are pixel art, so keep their edges crisp */
+  .Pixelated {
+    image-rendering: pixelated;
+  }
+
   .LinkButtons-item {
     display: flex;
     padding: 4px;
     background: linear-gradient(180deg, #1d1840, #07061a);
     border: 1px solid rgba(201, 184, 255, .55);
     box-shadow: inset 0 0 0 3px #07061a, 0 6px 20px rgba(27, 24, 48, .25);
+  }
+
+  .Exchange {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+    max-width: 64rem;
+    margin: 2rem auto 0;
+  }
+
+  @media (min-width: 640px) {
+    .Exchange {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .Exchange {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+  }
+
+  .Exchange-card {
+    align-items: center;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .Exchange-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 64px;
+    background: #08061a;
+    border: 1px solid rgba(201, 184, 255, .2);
+  }
+
+  .Exchange-name {
+    margin-top: .75rem;
+    font-size: 1.1rem;
+  }
+
+  .Exchange-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    max-width: 64rem;
+    margin: 1.5rem auto 0;
   }
 </style>

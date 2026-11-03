@@ -2,7 +2,7 @@
 
 ---
 
-<ui-tabs class="tabs block">
+<ui-tabs class="tabs">
   <slot />
 </ui-tabs>
 
@@ -20,7 +20,7 @@
           tablist = document.createElement('div');
           tablist.setAttribute('role', 'tablist');
           tablist.setAttribute('aria-orientation', 'horizontal'); // a11y
-          tablist.className = 'tablist flex items-center';
+          tablist.className = 'tablist';
           this.prepend(tablist);
         }
 
@@ -32,8 +32,7 @@
           const btn = document.createElement('button');
           btn.type = 'button';
           btn.id = `ui-tab-${i + 1}`; // ensure aria-labelledby works
-          btn.className =
-            'tab inline-flex items-center';
+          btn.className = 'tab';
           btn.setAttribute('role', 'tab');
           btn.setAttribute('aria-controls', panelId);
           btn.setAttribute('aria-selected', String(i === 0));
@@ -41,7 +40,7 @@
           btn.innerHTML = `<span>${label}</span>`;
 
           const li = document.createElement('div');
-          li.className = 'flex justify-center';
+          li.className = 'tab-item';
           li.appendChild(btn);
           tablist.appendChild(li);
 
@@ -94,11 +93,14 @@
 <style is:global>
 ui-tabs {
   --ease: cubic-bezier(.2,.7,.2,1);
+  display: block;
 }
 
 /* the tab bar: a row of ornamental pills over a fading rule */
 ui-tabs .tablist {
   position: relative;
+  display: flex;
+  align-items: center;
   flex-wrap: wrap;
   justify-content: center;
   gap: .75rem 1.25rem;
@@ -117,8 +119,15 @@ ui-tabs .tablist::after {
   background: linear-gradient(90deg, transparent, rgba(75, 58, 168, .45), transparent);
 }
 
+ui-tabs .tab-item {
+  display: flex;
+  justify-content: center;
+}
+
 /* each tab button */
 ui-tabs [role="tab"] {
+  display: inline-flex;
+  align-items: center;
   -webkit-tap-highlight-color: transparent;
   height: auto;
   padding: .65rem 1.4rem;

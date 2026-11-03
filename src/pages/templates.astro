@@ -50,10 +50,10 @@ const sorted = [...items].sort(
   intro="Free website templates. Explore the spread and select a card to reveal its details."
   description="Free website templates from Vizune Designs."
 >
-  <section class="relative pb-4" data-tarot-root>
-    <div class="relative mx-auto max-w-[54rem]">
+  <section class="Spread-section" data-tarot-root>
+    <div class="Spread-stage">
       <div
-        class="tarot-spread relative w-full h-[400px] sm:h-[440px] md:h-[500px]"
+        class="tarot-spread"
         data-spread
       >
         {sorted.map((post, idx) => (
@@ -65,13 +65,12 @@ const sorted = [...items].sort(
         type="button"
         aria-label="Previous template"
         data-prev
-        class="Spread-arrow Spread-arrow--prev Btn h-11 w-11 sm:h-14 sm:w-14 md:h-16 md:w-16 !p-0 rounded-full"
+        class="Spread-arrow Spread-arrow--prev Btn"
       >
         <img
           src={arrowPng.src}
           alt=""
           aria-hidden="true"
-          class="w-[32px] h-[21px] rotate-180"
         />
       </button>
 
@@ -79,13 +78,12 @@ const sorted = [...items].sort(
         type="button"
         aria-label="Next template"
         data-next
-        class="Spread-arrow Spread-arrow--next Btn h-11 w-11 sm:h-14 sm:w-14 md:h-16 md:w-16 !p-0 rounded-full"
+        class="Spread-arrow Spread-arrow--next Btn"
       >
         <img
           src={arrowPng.src}
           alt=""
           aria-hidden="true"
-          class="w-[32px] h-[21px]"
         />
       </button>
     </div>
@@ -288,11 +286,67 @@ const sorted = [...items].sort(
 </Layout>
 
 <style>
+  .Spread-section {
+    position: relative;
+    padding-bottom: 1rem;
+  }
+
+  .Spread-stage {
+    position: relative;
+    max-width: 54rem;
+    margin: 0 auto;
+  }
+
+  .tarot-spread {
+    position: relative;
+    width: 100%;
+    height: 400px;
+  }
+
+  @media (min-width: 640px) {
+    .tarot-spread {
+      height: 440px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .tarot-spread {
+      height: 500px;
+    }
+  }
+
   .Spread-arrow {
     position: absolute;
     top: 50%;
     z-index: 5;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0;
+    border-radius: 50%;
     transform: translateY(-50%);
+  }
+
+  @media (min-width: 640px) {
+    .Spread-arrow {
+      width: 3.5rem;
+      height: 3.5rem;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .Spread-arrow {
+      width: 4rem;
+      height: 4rem;
+    }
+  }
+
+  .Spread-arrow img {
+    width: 32px;
+    height: 21px;
+  }
+
+  .Spread-arrow--prev img {
+    rotate: 180deg;
   }
 
   .Spread-arrow:hover:not(:disabled) {

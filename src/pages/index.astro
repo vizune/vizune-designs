@@ -46,7 +46,7 @@ const prev = previous
 >
   {latest ? (
     <BlogArticle entry={latest} assetsById={assetsById} prev={prev}>
-      <p class="text-center pt-6">
+      <p class="Home-more">
         <a href="/blog/" class="Btn Btn--small">All posts <span aria-hidden="true">›</span></a>
       </p>
       {/* Same thread as the post's own page, so comments match in both places */}
@@ -56,3 +56,10 @@ const prev = previous
     <p class="PanelIntro">A creative hub where anime, gaming, design and web development merge.</p>
   )}
 </Layout>
+
+<style>
+  .Home-more {
+    padding-top: 1.5rem;
+    text-align: center;
+  }
+</style>

@@ -90,7 +90,7 @@ const labelFor = (tag: string) => tagReference[tag] ?? tag;
     ))}
   </FilterDropdown>
 
-  <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" data-grid>
+  <div class="renders-grid" data-grid>
     {sorted.map((post) => (
       <RendersPostCard post={post} assetsById={assetsById} />
     ))}
@@ -135,7 +135,7 @@ const labelFor = (tag: string) => tagReference[tag] ?? tag;
           const matches = matchesTag(card, currentTag);
 
           if (!matches) {
-            card.classList.add('hidden');
+            card.hidden = true;
             return;
           }
 
@@ -143,7 +143,7 @@ const labelFor = (tag: string) => tagReference[tag] ?? tag;
             matchedIndex >= start &&
             matchedIndex < end;
 
-          card.classList.toggle('hidden', !inPage);
+          card.hidden = !inPage;
           matchedIndex += 1;
         });
 
@@ -225,3 +225,23 @@ const labelFor = (tag: string) => tagReference[tag] ?? tag;
 </div>
 
 </Layout>
+
+<style>
+  .renders-grid {
+    display: grid;
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .renders-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .renders-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

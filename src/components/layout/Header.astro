@@ -1,8 +1,8 @@
 ---
 ---
 
-<header class="Header flex flex-wrap justify-center relative mx-auto h-[500px] w-full overflow-hidden">
-  <div class="flex justify-center relative w-full">
+<header class="Header">
+  <div class="Header-inner">
     <picture>
       <source media="(max-width: 640px)" srcset="/images/header-xs.webp" />
       <source media="(max-width: 1024px)" srcset="/images/header-md.webp" />
@@ -11,7 +11,7 @@
         src="/images/header-long.webp"
         alt=""
         role="presentation"
-        class="Header-img h-[500px] object-cover object-[10%] xl:object-center"
+        class="Header-img"
         width="1920"
         height="500"
         loading="eager"
@@ -19,12 +19,12 @@
       />
     </picture>
 
-    <a href="/" class="Header-logo absolute lg:top-[1rem] left-1/2 -translate-x-2/4 flex items-center justify-center" aria-label="Vizune Designs home">
-      <div class="h-[375px]">
-        <span class="Header-arches font-logo uppercase text-4xl block text-center tracking-wider leading-[0] text-white">
-          <img src="/images/arch.svg" width="300" height="214" alt="" role="presentation" class="mx-auto relative left-[3.5px]" />
-          <span class="Header-name block text-[5rem] xl:text-[4rem]">Vizune</span>
-          <img src="/images/arch.svg" width="300" height="214" alt="" role="presentation" class="mx-auto rotate-180 origin-center -translate-x-[3.5px]" />
+    <a href="/" class="Header-logo" aria-label="Vizune Designs home">
+      <div class="Header-frame">
+        <span class="Header-arches">
+          <img src="/images/arch.svg" width="300" height="214" alt="" role="presentation" class="Header-arch Header-arch--top" />
+          <span class="Header-name">Vizune</span>
+          <img src="/images/arch.svg" width="300" height="214" alt="" role="presentation" class="Header-arch Header-arch--bottom" />
         </span>
       </div>
     </a>
@@ -34,9 +34,52 @@
 </header>
 
 <style>
-/* The arch artwork sits 3.5px left of centre inside arch.svg, so both halves
-   are nudged to line up with the page centre and the banner's mirror line. */
+.Header {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  height: 500px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.Header-inner {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.Header-logo {
+  position: absolute;
+  left: 50%;
+  translate: -50% 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 1024px) {
+  .Header-logo {
+    top: 1rem;
+  }
+}
+
+.Header-frame {
+  height: 375px;
+}
+
 .Header-arches {
+  display: block;
+  font-family: var(--font-logo);
+  font-size: 2.25rem;
+  line-height: 0;
+  letter-spacing: .05em;
+  text-align: center;
+  text-transform: uppercase;
+  color: #fff;
   opacity: 0;
   animation: fade 2s ease-in-out 1s forwards;
 }
@@ -46,7 +89,25 @@
   to { opacity: 1; }
 }
 
+/* The arch artwork sits 3.5px left of centre inside arch.svg, so both halves
+   are nudged to line up with the page centre and the banner's mirror line. */
+.Header-arch {
+  margin: 0 auto;
+}
+
+.Header-arch--top {
+  position: relative;
+  left: 3.5px;
+}
+
+.Header-arch--bottom {
+  translate: -3.5px 0;
+  rotate: 180deg;
+}
+
 .Header-name {
+  display: block;
+  font-size: 5rem;
   margin: .25rem 0 0;
   line-height: 0;
   /* Extra letter-spacing for the logo lettering; the matching left padding keeps it centred */
@@ -86,6 +147,12 @@
   to { opacity: 1; }
 }
 
+@media (min-width: 1280px) {
+  .Header-name {
+    font-size: 4rem;
+  }
+}
+
 @media (max-width: 640px) {
   .Header-name {
     letter-spacing: .06em;
@@ -101,8 +168,17 @@
 
 /* Fade the bottom of the banner into the page */
 .Header-img {
+  height: 500px;
+  object-fit: cover;
+  object-position: 10%;
   -webkit-mask-image: linear-gradient(180deg, #000 60%, transparent 100%);
   mask-image: linear-gradient(180deg, #000 60%, transparent 100%);
+}
+
+@media (min-width: 1280px) {
+  .Header-img {
+    object-position: center;
+  }
 }
 
 /* The banner art's mirror line is 3.5px right of the image centre;

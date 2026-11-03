@@ -64,9 +64,9 @@ const trackingId = `tutorial-card-${post.sys.id}`;
   data-tutorial-click
   data-tutorial-title={title}
   data-tutorial-slug={slug}
-  class="tutorial-card Card Card--hover p-3 sm:grid sm:grid-cols-[170px_1fr]"
+  class="tutorial-card Card Card--hover Post Post--list"
 >
-  <div class="Card-media aspect-square">
+  <div class="Card-media Post-media">
     {imgUrl ? (
       <img
         src={imgUrl}
@@ -75,26 +75,26 @@ const trackingId = `tutorial-card-${post.sys.id}`;
         decoding="async"
       />
     ) : (
-      <div class="h-full w-full flex items-center justify-center text-sm text-lavender/60">
+      <div class="Post-empty">
         No thumbnail
       </div>
     )}
   </div>
 
-  <div class="flex flex-col justify-center px-4 pt-5 pb-2 sm:px-5 sm:py-3">
+  <div class="Post-body">
     <p class="Kicker">
       <Sparkle class="Kicker-star" />
       Tutorial
-      {publishDate && <span class="text-lavender/70 tracking-[.16em]">· {publishDate}</span>}
+      {publishDate && <span class="Post-date">· {publishDate}</span>}
     </p>
 
-    <h2 class="Card-title mt-2 text-[1.45rem]">
+    <h2 class="Card-title Post-title Post-title--small">
       {title}
     </h2>
 
-    {description ? <p class="Card-text mt-3 line-clamp-4">{description}</p> : null}
+    {description ? <p class="Card-text Post-text Post-text--clamp">{description}</p> : null}
 
-    <span class="Card-more mt-4">Read tutorial <span aria-hidden="true">›</span></span>
+    <span class="Card-more Post-more">Read tutorial <span aria-hidden="true">›</span></span>
   </div>
 </a>
 
@@ -118,3 +118,72 @@ const trackingId = `tutorial-card-${post.sys.id}`;
     });
   }
 </script>
+
+<style>
+.Post {
+  padding: .75rem;
+}
+
+@media (min-width: 640px) {
+  .Post--list {
+    display: grid;
+    grid-template-columns: 170px 1fr;
+  }
+}
+
+.Post-media {
+  aspect-ratio: 1;
+}
+
+.Post-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: .875rem;
+  line-height: calc(1.25 / .875);
+  color: rgba(201, 184, 255, .6);
+}
+
+.Post-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1.25rem 1rem .5rem;
+}
+
+@media (min-width: 640px) {
+  .Post-body {
+    padding: .75rem 1.25rem;
+  }
+}
+
+.Post-date {
+  color: rgba(201, 184, 255, .7);
+  letter-spacing: .16em;
+}
+
+.Post-title {
+  margin-top: .5rem;
+}
+
+.Post-title--small {
+  font-size: 1.45rem;
+}
+
+.Post-text {
+  margin-top: .75rem;
+}
+
+.Post-text--clamp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
+}
+
+.Post-more {
+  margin-top: 1rem;
+}
+</style>

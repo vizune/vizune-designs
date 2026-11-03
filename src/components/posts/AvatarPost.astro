@@ -11,15 +11,6 @@ interface Props {
 const { img, index, category, id, tags, section } = Astro.props;
 
 const isCompact = section === 100;
-const isXL = section === 400;
-
-const wrapperClasses = `
-  overflow-hidden
-  border border-white/10
-  bg-white/5
-  backdrop-blur-md
-  ${isCompact ? 'flex items-center rounded-r-xl' : 'rounded-b-xl'}
-`;
 ---
 
 <article
@@ -29,7 +20,7 @@ const wrapperClasses = `
 >
   <div class:list={[
     'wrapper-item Avatar',
-    isCompact ? 'flex items-center' : 'flex flex-col',
+    isCompact ? 'Avatar--compact' : 'Avatar--stacked',
   ]}>
     {img ? (
       <img
@@ -37,25 +28,26 @@ const wrapperClasses = `
         alt={img.alt}
         loading="lazy"
         decoding="async"
-        class="Avatar-img block shrink-0 object-cover"
+        class="Avatar-img"
         style={`width: ${section}px; height: ${section}px;`}
         width={img.width}
         height={img.height}
       />
     ) : (
-      <div class="Avatar-img aspect-square grid place-items-center text-lavender/60 text-sm" style={`width: ${section}px;`}>
+      <div class="Avatar-img Avatar-empty" style={`width: ${section}px;`}>
         No image
       </div>
     )}
 
-    <div class:list={['Avatar-label p-2', { 'text-center': !isCompact }]}>
-      <strong>{index}</strong>{category ? <span class="text-lavender/80"> · {category}</span> : null}
+    <div class:list={['Avatar-label', { 'Avatar-label--center': !isCompact }]}>
+      <strong>{index}</strong>{category ? <span class="Avatar-category"> · {category}</span> : null}
     </div>
   </div>
 </article>
 
 <style>
 .Avatar {
+  display: flex;
   padding: 4px;
   color: #ddd6f7;
   background: linear-gradient(180deg, rgba(24, 18, 58, .96), rgba(8, 6, 24, .98));
@@ -70,13 +62,45 @@ const wrapperClasses = `
   box-shadow: 0 0 24px rgba(167, 139, 255, .45);
 }
 
+.Avatar--compact {
+  align-items: center;
+}
+
+.Avatar--stacked {
+  flex-direction: column;
+}
+
 .Avatar-img {
   border: 1px solid rgba(201, 184, 255, .2);
 }
 
+img.Avatar-img {
+  display: block;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+
+.Avatar-empty {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  font-size: .875rem;
+  line-height: calc(1.25 / .875);
+  color: rgba(201, 184, 255, .6);
+}
+
 .Avatar-label {
+  padding: .5rem;
   font-size: .8rem;
   line-height: 1.4;
+}
+
+.Avatar-label--center {
+  text-align: center;
+}
+
+.Avatar-category {
+  color: rgba(201, 184, 255, .8);
 }
 
 .Avatar-label strong {

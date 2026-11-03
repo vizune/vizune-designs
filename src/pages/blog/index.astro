@@ -36,8 +36,8 @@ const hasPagination = sorted.length > pageSize;
   kicker="News & updates"
   intro="Every post from the Vizune blog, newest first."
 >
-  <div class:list={['blog-list', { 'pb-10': !hasPagination }]} data-section="blog">
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-5xl mx-auto">
+  <div class:list={['blog-list', { 'blog-list--end': !hasPagination }]} data-section="blog">
+    <div class="blog-grid">
       {sorted.map((post) => (
         <BlogPost post={post} assetsById={assetsById} />
       ))}
@@ -83,3 +83,24 @@ const hasPagination = sorted.length > pageSize;
     </script>
   </div>
 </Layout>
+
+<style>
+  /* Without pagination below, leave the same space under the list */
+  .blog-list--end {
+    padding-bottom: 2.5rem;
+  }
+
+  .blog-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+    max-width: 64rem;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 1024px) {
+    .blog-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

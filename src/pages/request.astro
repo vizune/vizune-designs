@@ -156,7 +156,7 @@ const ruleCount = guidelines.reduce((n, g) => n + g.rules.length, 0);
 
   <!-- Examples -->
   {examples.length > 0 && (
-    <section class="mt-14">
+    <section class="Request-section">
       <h2 class="PanelHeading">Templates I've made</h2>
       <p class="PanelIntro">A few of the custom templates I've made so far. Select one to scroll through the full page.</p>
       <TemplateExamples examples={examples} />
@@ -164,7 +164,7 @@ const ruleCount = guidelines.reduce((n, g) => n + g.rules.length, 0);
   )}
 
   <!-- Guidelines -->
-  <section class="mt-14">
+  <section class="Request-section">
     <h2 class="PanelHeading">The guidelines</h2>
     <p class="PanelIntro">{ruleCount} rules in four parts. Open each one and give it a read before you apply.</p>
 
@@ -188,7 +188,7 @@ const ruleCount = guidelines.reduce((n, g) => n + g.rules.length, 0);
   </section>
 
   <!-- Application form -->
-  <section class="mt-14" id="apply">
+  <section class="Request-section" id="apply">
     <h2 class="PanelHeading">Apply for a template</h2>
 
     {status.open ? (
@@ -196,27 +196,27 @@ const ruleCount = guidelines.reduce((n, g) => n + g.rules.length, 0);
         <!-- FormSubmit options: email subject, table layout, and a hidden spam trap -->
         <input type="hidden" name="_subject" value="New template request from Vizune" />
         <input type="hidden" name="_template" value="table" />
-        <input type="text" name="_honey" class="hidden" tabindex="-1" autocomplete="off" aria-hidden="true" />
+        <input type="text" name="_honey" hidden tabindex="-1" autocomplete="off" aria-hidden="true" />
 
         <div class="Apply-row">
           <label class="Apply-field">
             <span class="Apply-label">Name</span>
-            <input class="Field !pr-4" type="text" name="name" required autocomplete="name" />
+            <input class="Field Apply-input" type="text" name="name" required autocomplete="name" />
           </label>
           <label class="Apply-field">
             <span class="Apply-label">Email</span>
-            <input class="Field !pr-4" type="email" name="email" required autocomplete="email" />
+            <input class="Field Apply-input" type="email" name="email" required autocomplete="email" />
           </label>
         </div>
 
         <div class="Apply-row">
           <label class="Apply-field">
             <span class="Apply-label">Your current site <em>(if you have one)</em></span>
-            <input class="Field !pr-4" type="url" name="website" placeholder="https://" />
+            <input class="Field Apply-input" type="url" name="website" placeholder="https://" />
           </label>
           <label class="Apply-field">
             <span class="Apply-label">Platform</span>
-            <span class="relative block">
+            <span class="Apply-select">
               <select class="Field" name="platform" required>
                 <option value="">Choose a platform</option>
                 <option>Neocities / static HTML</option>
@@ -226,7 +226,7 @@ const ruleCount = guidelines.reduce((n, g) => n + g.rules.length, 0);
                 <option>Carrd</option>
                 <option>Other</option>
               </select>
-              <svg class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-purple" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <svg class="Apply-chevron" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 111.08 1.04l-4.24 4.38a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
               </svg>
             </span>
@@ -256,7 +256,7 @@ const ruleCount = guidelines.reduce((n, g) => n + g.rules.length, 0);
         <div class="Apply-row">
           <label class="Apply-field">
             <span class="Apply-label">Guidelines word</span>
-            <input class="Field !pr-4" type="text" name="guidelines_word" required autocomplete="off" />
+            <input class="Field Apply-input" type="text" name="guidelines_word" required autocomplete="off" />
             <span class="Apply-hint">You'll find it in the guidelines above.</span>
           </label>
           <label class="Apply-check">
@@ -265,10 +265,10 @@ const ruleCount = guidelines.reduce((n, g) => n + g.rules.length, 0);
           </label>
         </div>
 
-        <p class="text-center pt-2">
+        <p class="Apply-submit">
           <button type="submit" class="Btn" disabled={!FORM_ACTION}>Send application <span aria-hidden="true">›</span></button>
         </p>
-        {!FORM_ACTION && <p class="Apply-hint text-center">The form isn't connected yet.</p>}
+        {!FORM_ACTION && <p class="Apply-hint Apply-hint--center">The form isn't connected yet.</p>}
       </form>
     ) : (
       <p class="PanelIntro">Requests are closed at the moment. Please check back soon.</p>
@@ -277,6 +277,10 @@ const ruleCount = guidelines.reduce((n, g) => n + g.rules.length, 0);
 </Layout>
 
 <style>
+  .Request-section {
+    margin-top: 3.5rem;
+  }
+
   /* ---------- Status ---------- */
 
   .Status {
@@ -455,6 +459,27 @@ const ruleCount = guidelines.reduce((n, g) => n + g.rules.length, 0);
     color: #5b4f99;
   }
 
+  /* Text inputs have no chevron, so they don't need the select's extra right padding */
+  .Apply-input {
+    padding-right: 1rem;
+  }
+
+  .Apply-select {
+    position: relative;
+    display: block;
+  }
+
+  .Apply-chevron {
+    position: absolute;
+    top: 50%;
+    right: .75rem;
+    width: 1rem;
+    height: 1rem;
+    translate: 0 -50%;
+    color: var(--purple);
+    pointer-events: none;
+  }
+
   .Apply-text {
     height: auto;
     padding: .75rem 1rem;
@@ -465,6 +490,15 @@ const ruleCount = guidelines.reduce((n, g) => n + g.rules.length, 0);
   .Apply-hint {
     font-size: .8rem;
     color: #5b4f99;
+  }
+
+  .Apply-hint--center {
+    text-align: center;
+  }
+
+  .Apply-submit {
+    padding-top: .5rem;
+    text-align: center;
   }
 
   .Apply-check {
