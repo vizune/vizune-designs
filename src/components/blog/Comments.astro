@@ -22,6 +22,10 @@ const origin = import.meta.env.PUBLIC_SITE_URL?.replace(/\/$/, '');
   <h2 class="PanelHeading" id="comments-title">Comments</h2>
   {
     host ? (
+      <div class="Comments-status" id="comments-status" role="status" aria-live="polite" hidden>
+        <span class="Comments-spinner" aria-hidden="true" />
+        <span class="Comments-statusText">Loading comments…</span>
+      </div>
       <div id="remark42" data-host={host} data-site-id={siteId} data-origin={origin} data-path={path}>
         <noscript>Comments need JavaScript turned on.</noscript>
       </div>
@@ -35,6 +39,38 @@ const origin = import.meta.env.PUBLIC_SITE_URL?.replace(/\/$/, '');
   const el = document.getElementById('remark42');
   if (el) {
     const { host, siteId, origin, path } = el.dataset;
+
+    // Loading state: spinner until the widget appears, a message if it never does.
+    // It starts hidden in the HTML so visitors without JavaScript don't see an endless spinner.
+    const status = document.getElementById('comments-status');
+    const statusText = status?.querySelector('.Comments-statusText');
+    let loaded = false;
+    const showLoaded = () => {
+      if (loaded) return;
+      loaded = true;
+      clearTimeout(slowTimer);
+      observer.disconnect();
+      if (status) status.hidden = true;
+    };
+    const showFailed = () => {
+      if (loaded || !status || !statusText) return;
+      status.classList.add('is-failed');
+      statusText.textContent = "Comments couldn't load right now. Please refresh the page to try again.";
+    };
+    if (status) status.hidden = false;
+    // Give a slow comments server a fair chance before saying anything's wrong
+    const slowTimer = setTimeout(showFailed, 20000);
+
+    // Remark42 adds an iframe and messages the page once the widget has drawn itself
+    const watchIframe = (iframe: HTMLIFrameElement) => iframe.addEventListener('load', showLoaded, { once: true });
+    const observer = new MutationObserver(() => {
+      const iframe = el.querySelector('iframe');
+      if (iframe) watchIframe(iframe);
+    });
+    observer.observe(el, { childList: true, subtree: true });
+    window.addEventListener('message', (event) => {
+      if (host && event.origin === new URL(host).origin) showLoaded();
+    });
     const config = {
       host,
       site_id: siteId,
@@ -69,6 +105,7 @@ const origin = import.meta.env.PUBLIC_SITE_URL?.replace(/\/$/, '');
       else script.async = true;
       script.defer = true;
       script.src = `${host}/web/${component}${modern ? '.mjs' : '.js'}`;
+      script.addEventListener('error', showFailed);
       (document.head || document.body).appendChild(script);
     }
   }
@@ -79,6 +116,46 @@ const origin = import.meta.env.PUBLIC_SITE_URL?.replace(/\/$/, '');
     max-width: 40rem;
     margin: 3.5rem auto 0;
     scroll-margin-top: 2rem;
+  }
+
+  .Comments-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 2.5rem 1rem;
+    color: #4a4566;
+    text-align: center;
+  }
+
+  .Comments-status[hidden] {
+    display: none;
+  }
+
+  .Comments-spinner {
+    flex: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    border: 3px solid rgba(75, 58, 168, 0.2);
+    border-top-color: rgb(75, 58, 168);
+    animation: comments-spin 0.8s linear infinite;
+  }
+
+  .Comments-status.is-failed .Comments-spinner {
+    display: none;
+  }
+
+  @keyframes comments-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .Comments-spinner {
+      animation-duration: 2.4s;
+    }
   }
 
   .Comments-soon {
